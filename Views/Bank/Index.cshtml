@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Labs.Models.Bank>
+@{
+    ViewBag.Title = "Список банков";
+}
+
+ <a asp-action="Create">Добавить банк</a> 
+
+<table class="table">
+    <tr><th>Название</th><th>УНП</th><th>Р/С</th><th>БИК</th></tr>
+    @foreach (var bank in Model)
+    {
+<tr>
+    <td>@bank.bank_name</td>
+    <td>@bank.innclient</td>
+    <td>@bank.bank_account</td>
+    <td>@bank.bank_bik</td>
+    <td>
+        <form asp-action="Delete" asp-route-id="@bank.Id" method="post">
+            <!-- <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@bank.Id">Подробнее</a> -->
+            <button type="submit" class="btn btn-sm btn-danger">
+                Удалить
+            </button>
+        </form>
+    </td>
+</tr>
+    }
+</table>

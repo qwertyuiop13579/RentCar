@@ -1,0 +1,36 @@
+﻿@model Labs.ViewModels.RentCarViewModel
+@{
+    ViewBag.Title = "Аренда машины";
+}
+    <form asp-action="Rent" asp-controller="Car">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="id_car" value="@Model.id_car" class="form-control" />
+        <div class="form-group">
+            <label asp-for="date2" class="control-label">Начало аренды</label>
+            <input type="date" asp-for="date2" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="date3" class="control-label">Окончание аренды</label>
+            <input type="date" asp-for="date3" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="datepay" class="control-label">Дата оплаты</label>
+            <input type="date" asp-for="datepay" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="account_number" class="control-label">Номер счёта</label>
+            <input type="text" asp-for="account_number" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="payer_number" class="control-label">Номер плетельщика</label>
+            <input type="text" asp-for="payer_number" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="price" class="control-label">Цена</label>
+            <input type="number" asp-for="price" class="form-control" />
+        </div>     
+        <div class="form-group">
+            <input type="submit" value="Добавить" class="btn btn-outline-secondary" />
+        </div>
+    </form>
+<a asp-controller="Car" asp-action="Index" class="btn btn-primary">Отмена</a>
