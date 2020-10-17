@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Labs.Models
 {
-    public class Name1
+    public class Client
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int id_passport { get; set; }
+        public int id_address { get; set; }
     }
 }

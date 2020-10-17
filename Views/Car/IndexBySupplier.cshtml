@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Labs.Models.Car>
+@{
+    ViewBag.Title = "Список моих машин";
+}
+<form method="get">
+    <div class="form-inline form-group">
+        <label class="control-label">Марка: </label>
+        <input name="mark" class="form-control" />
+
+        <label class="control-label">Цвет: </label>
+        <input name="color" class="form-control" />
+
+        <label class="control-label">Год: </label>
+        <input type="number" name="year" class="form-control" />
+
+        <input type="submit" value="Поиск" class="btn btn-sm btn-primary" />
+    </div>
+</form>
+
+<table class="table">
+    <tr><th>Марка</th><th>Модель</th><th>Год</th><th>Цвет</th><th>Цена/час</th><th>Статус</th></tr>
+    @foreach (var car in Model)
+    {
+        <tr>
+            <td>@car.Mark</td>
+            <td>@car.Model</td>
+            <td>@car.Year</td>
+            <td>@car.Color</td>
+            <td>@car.Price</td>
+            <td>@car.status</td>
+            <td>
+                <a class="btn btn-sm btn-primary" asp-controller="Car" asp-action="Edit" asp-route-id_car="@car.Id">Изменить</a>
+                <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="IndexByCar" asp-route-id_car="@car.Id">История</a>
+                <a class="btn btn-sm btn-danger" asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id">Удалить</a>
+
+            </td>
+        </tr>
+    }
+</table>

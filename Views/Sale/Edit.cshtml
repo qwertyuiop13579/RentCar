@@ -1,10 +1,14 @@
-﻿@model Labs.ViewModels.EditRentViewModel
+﻿@model Labs.ViewModels.EditSaleViewModel
 @{
     ViewBag.Title = "Изменить аренду";
 }
 <form asp-action="Edit" asp-controller="Sale">
     <div asp-validation-summary="All" class="text-danger"></div>
-    <input type="hidden" asp-for="id_car" value="@Model.id_car" class="form-control" />
+    <input type="hidden" asp-for="id_car" value="@Model.id_car" />
+    <input type="hidden" asp-for="Id" value="@Model.Id" />
+    <input type="hidden" asp-for="id_client" value=@Model.id_client />
+    <input type="hidden" asp-for="id_car" value=@Model.id_car />
+    <input type="hidden" asp-for="status" value=@Model.status />
     <div class="form-group">
         <label asp-for="date2" class="control-label">Начало аренды</label>
         <input type="date" asp-for="date2" class="form-control" />
@@ -33,4 +37,4 @@
         <input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
     </div>
 </form>
-<a asp-controller="Car" asp-action="Index" class="btn btn-primary">Отмена</a>
+<a href='javascript:history.go(-1)' class="btn btn-primary">Отмена</a>

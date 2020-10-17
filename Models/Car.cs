@@ -13,9 +13,13 @@ namespace Labs.Models
         public string Model { get; set; }
         public string Mark { get; set; }
         public string Color { get; set; }
-        public string Goverment_number { get; set; }
+        public string Goverment_number { get; set; }        
         public int Year { get; set; }          //год выпуска
         public int id_supplier { get; set; }
-        public int Price { get; set; }     
+        
+        public int Price { get; set; }
+        public string status { get; set; }
+        public string country { get; set; }
+        public string city { get; set; }
     }
 }

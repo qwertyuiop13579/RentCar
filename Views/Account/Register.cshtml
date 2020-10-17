@@ -8,34 +8,24 @@
     <div>
         <div>
             <label asp-for="Email">Введите Email</label><br />
-            <input type="email" asp-for="Email" maxlength="50"/>
+            <input type="email" asp-for="Email" maxlength="50" />
             <span asp-validation-for="Email" />
         </div>
         <div>
-            <label asp-for="Name1">Введите фамилию</label><br />
-            <input type="text" asp-for="Name1" maxlength="50"/>
-            <span asp-validation-for="Name1" />
-        </div>
-        <div>
-            <label asp-for="Name2">Введите имя</label><br />
-            <input type="text" asp-for="Name2" maxlength="50"/>
-            <span asp-validation-for="Name2" />
-        </div>
-        <div>
-            <label asp-for="Name3">Введите отчество</label><br />
-            <input type="text" asp-for="Name3" maxlength="50"/>
-            <span asp-validation-for="Name3" />
-        </div>
-        <div>
             <label asp-for="Password">Введите пароль</label><br />
-            <input type="password" asp-for="Password" maxlength="50"/>
+            <input type="password" asp-for="Password" maxlength="50" />
             <span asp-validation-for="Password" />
         </div>
         <div>
             <label asp-for="ConfirmPassword">Повторите пароль</label><br />
-            <input type="password" asp-for="ConfirmPassword" maxlength="50"/>
+            <input type="password" asp-for="ConfirmPassword" maxlength="50" />
             <span asp-validation-for="ConfirmPassword" />
         </div>
+        <div>
+            <label asp-for="issupplier">Поставщик</label><br />
+            <input type="checkbox" asp-for="issupplier"/>
+        </div>
+        <br />
         <div>
             <input type="submit" value="Регистрация" />
         </div>

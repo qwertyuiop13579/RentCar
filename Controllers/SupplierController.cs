@@ -25,8 +25,18 @@ namespace Labs.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.Banks= new SelectList(_context.GetAllBanks(), "bank_name", "bank_name");
-            return View();
+            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
+            int id_supp = _context.FindSupplierByClient(id_cl).Id;
+            if (_context.FindUser(User.Identity.Name).id_client == 0)
+            {
+                return RedirectToAction("Create", "Client");
+                
+            }
+            else if(id_supp!=0)
+            {
+                return RedirectToAction("Edit", "Supplier", new { id = id_supp });
+            }
+            else return View();
         }
 
         [HttpPost]
@@ -34,41 +44,103 @@ namespace Labs.Controllers
         {
             if (ModelState.IsValid)
             {
-                Bank bank = _context.FindBank(model.bank_name);
-                if (bank != null)
+                var address = new Address()
                 {
-                    _context.AddCountry(new Country() { Name = model.country });
-                    _context.AddRegion(new Region() { Name = model.region });
-                    _context.AddDistrict(new District() { Name = model.district });
-                    _context.AddCity(new City() { Name = model.city });
-                    _context.AddStreet(new Street() { Name = model.street });
-                    var address = new Address()
-                    {
-                        id_country = _context.FindCountry(model.country).Id,
-                        id_region = _context.FindRegion(model.region).Id,
-                        id_district = _context.FindDistrict(model.district).Id,
-                        type1 = model.type1,
-                        id_city = _context.FindCity(model.city).Id,
-                        type2 = model.type2,
-                        id_street = _context.FindStreet(model.street).Id,
-                        num1 = model.num1,
-                        num2 = model.num2,
-                        num3 = model.num3,
-                        index = model.index,
-                        num4 = model.num4,
-                        code = model.code,
-                        mobile = model.mobile,
-                        email = model.email
-                    };
-                    _context.AddAddress(address);
+                    country = model.country,
+                    type1 = model.type1,
+                    city = model.city,
+                    type2 = model.type2,
+                    street = model.street,
+                    numhouse = Convert.ToInt32(model.numhouse),
+                    numapartment = Convert.ToInt32(model.numapartment),
+                    index = model.index,
+                    housephone = model.housephone,
+                    mobilephone = model.mobilephone,
+                    email = model.mobilephone,
+                };
+                int id_addr = _context.AddAddress(address);
 
-                    Supplier supp = new Supplier() {firmname=model.firmname,id_address=_context.FindAddress(address).Id,unn=model.unn,id_bank_details=bank.Id };
 
-                    if (_context.AddSupplier(supp)) return RedirectToAction("Index");
-                    else ModelState.AddModelError("", "Ошибка");
+                int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
 
+                Supplier supp = new Supplier() { firmname = model.firmname, id_address = id_addr, unn = model.unn, id_client = id_cl };
+
+                int id_supp = _context.AddSupplier(supp);
+                if (id_supp != 0)
+                {
+                    return RedirectToAction("Index", "Home");
                 }
-                else ModelState.AddModelError("", "Такого банка не существует");
+                else ModelState.AddModelError("", "Ошибка");
+
+
+
+
+            }
+            return View(model);
+        }
+
+
+        public IActionResult Edit(int id)
+        {
+            Supplier supp = _context.FindSupplier(id);
+            Address addr = _context.FindAddress(supp.id_address);
+            EditSupplierViewModel model = new EditSupplierViewModel
+            {
+                Id = supp.Id,
+                firmname = supp.firmname,
+                unn = supp.firmname,
+
+                country = addr.country,
+                type1 = addr.type1,
+                city = addr.city,
+                type2 = addr.type2,
+                street = addr.street,
+                numhouse = addr.numhouse,
+                numapartment = addr.numapartment,
+                index = addr.index,
+                housephone = addr.housephone,
+                mobilephone = addr.mobilephone,
+                email = addr.mobilephone,  
+    };
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(EditSupplierViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Address address = new Address()
+                {
+                    country = model.country,
+                    type1 = model.type1,
+                    city = model.city,
+                    type2 = model.type2,
+                    street = model.street,
+                    numhouse = Convert.ToInt32(model.numhouse),
+                    numapartment = Convert.ToInt32(model.numapartment),
+                    index = model.index,
+                    housephone = model.housephone,
+                    mobilephone = model.mobilephone,
+                    email = model.mobilephone,
+                };
+               int id_addr= _context.AddAddress(address);
+               int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
+                Supplier supp = new Supplier()
+                {
+                    firmname = model.firmname,
+                    id_address = id_addr,
+                    unn = model.unn,
+                    id_client = id_cl
+                };
+
+                if (_context.UpdateSupplier(supp))
+                {
+                    return RedirectToAction("Index","Home");
+                }
+                else ModelState.AddModelError("", "Ошибка");
             }
             return View(model);
         }
@@ -82,7 +154,7 @@ namespace Labs.Controllers
             {
                 _context.DeleteSupplier(id);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
     }

@@ -13,6 +13,6 @@ namespace Labs.Models
         public string firmname { get; set; }
         public int id_address { get; set; }
         public string unn { get; set; }
-        public int id_bank_details { get; set; }
+        public int id_client { get; set; }
     }
 }

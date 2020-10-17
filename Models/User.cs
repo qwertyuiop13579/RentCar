@@ -10,22 +10,16 @@ namespace Labs.Models
 {
     public class User
     {
-        [Key]
-        
+        [Key]     
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]    
         public int Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public int RoleId { get; set; }
-
-        public int StatusId { get; set; }        
-        public DateTime dataofregistration { get; set; }
-        public DateTime? dataofbeginblock { get; set; }
-        public DateTime? dataofendbock { get; set; }
-
-        public int IdName1 { get; set; }
-        public int IdName2 { get; set; }
-        public int IdName3 { get; set; }
-        public int id_client { get; set; }
+        public DateTime dateofregistration { get; set; }
+        public int id_role { get; set; }
+        public int id_status { get; set; }                
+        public DateTime dateofbeginblock { get; set; }
+        public DateTime dateofendbock { get; set; }
+        public int? id_client { get; set; }
     }
 }

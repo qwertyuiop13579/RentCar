@@ -21,36 +21,25 @@ namespace Labs.ViewModels
         public DateTime date3 { get; set; }
 
         [Required(ErrorMessage = "Не указана фамилия")]
-        public string Name1 { get; set; }
+        public string surname { get; set; }
 
         [Required(ErrorMessage = "Не указано имя")]
-        public string Name2 { get; set; }
-        public string Name3 { get; set; }
+        public string name { get; set; }
+        public string patronymic { get; set; }
 
 
 
         public string country { get; set; }
-        public string region { get; set; }
-        public string district { get; set; }
         public TypeCity type1 { get; set; }
         public string city { get; set; }
         public TypeStreet type2 { get; set; }
-
-
         public string street { get; set; }
+        public int numhouse { get; set; }
+        public int numapartment { get; set; }
 
-        [MaxLength(4)]
-        public string num1 { get; set; }
-        public int num2 { get; set; }
-        [MaxLength(5)]
-        public string num3 { get; set; }
-
-        public int index { get; set; }
-        public int num4 { get; set; }
-        public int code { get; set; }
-        public int mobile { get; set; }
+        public string index { get; set; }
+        public string housephone { get; set; }
+        public string mobilephone { get; set; }
         public string email { get; set; }
-
-        public string bank_name { get; set; }
     }
 }

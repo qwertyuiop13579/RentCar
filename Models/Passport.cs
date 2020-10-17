@@ -18,9 +18,9 @@ namespace Labs.Models
         public string authority { get; set; }
         public Sex sex { get; set; }
         public DateTime date3 { get; set; }
-        public int id_name1 { get; set; }
-        public int id_name2 { get; set; }
-        public int id_name3 { get; set; }
+        public string surname { get; set; }
+        public string name { get; set; }
+        public string patronymic { get; set; }
     }
     public enum Sex
     {

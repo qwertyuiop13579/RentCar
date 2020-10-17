@@ -19,11 +19,13 @@ namespace Labs.Controllers
         }
         public IActionResult Index()
         {
+
+
             return View();
         }
         public IActionResult About()
         {
-            return Content("Вход только для администратора");
+            return Content("О сайте");
         }
 
         public IActionResult Privacy()

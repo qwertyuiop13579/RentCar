@@ -70,7 +70,7 @@ namespace Labs
 
             app.Use(async (context, next) =>
             {
-                context.Response.Headers.Add("X-Xss-Protection", "1");  //Enables XSS protection. If XSS is detected, the browser attempts to filter or sanitize the output, but still renders it for the most part.
+                //context.Response.Headers.Add("X-Xss-Protection", "1");  //Enables XSS protection. If XSS is detected, the browser attempts to filter or sanitize the output, but still renders it for the most part.
                 await next();
             });
 

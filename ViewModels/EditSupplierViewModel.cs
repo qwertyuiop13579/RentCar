@@ -1,33 +1,20 @@
-﻿using System;
+﻿using Labs.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Labs.Models
+namespace Labs.ViewModels
 {
-    public enum TypeCity
+    public class EditSupplierViewModel
     {
-        город,
-        деревня,
-        ПГТ,
-        посёлок
-    }
-
-    public enum TypeStreet
-    {
-        улица,
-        проспект,
-        проезд,
-        переулок,
-        бульвар,
-    }
-
-
-    public class Address
-    {
-        [Key]
         public int Id { get; set; }
+        public string firmname { get; set; }
+        public string unn { get; set; }
+
+
+
         public string country { get; set; }
         public TypeCity type1 { get; set; }
         public string city { get; set; }
@@ -35,6 +22,7 @@ namespace Labs.Models
         public string street { get; set; }
         public int numhouse { get; set; }
         public int numapartment { get; set; }
+
         public string index { get; set; }
         public string housephone { get; set; }
         public string mobilephone { get; set; }

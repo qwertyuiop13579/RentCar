@@ -19,12 +19,7 @@ namespace Labs.ViewModels
         [Compare("Password", ErrorMessage = "Пароль введен неверно")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Не указана фамилия")]
-        public string Name1 { get; set; }
-
-        [Required(ErrorMessage = "Не указано имя")]
-        public string Name2 { get; set; }
-        public string Name3 { get; set; }
+        public bool issupplier { get; set; }
 
     }
 }

@@ -7,7 +7,7 @@ using System;
 namespace Labs.Controllers
 {
 
-    [Authorize(Roles = "admin,director")]
+    [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
         private UserContext _context;
@@ -35,9 +35,9 @@ namespace Labs.Controllers
                     Role userRole = _context.FindRole("user");
                     if (userRole != null)
                     {
-                        user.RoleId = userRole.Id;
+                        user.id_role = userRole.Id;
                     }
-                    user.dataofregistration = DateTime.Now;
+                    user.dateofregistration = DateTime.Now;
                     _context.AddNewUser(user);
 
                 }
@@ -53,9 +53,7 @@ namespace Labs.Controllers
             {
                 return NotFound();
             }
-            EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email,
-                Name1=_context.FindName1(user.IdName1).Name, Name2 = _context.FindName2(user.IdName2).Name, Name3 = _context.FindName3(user.IdName3).Name,
-            };
+            EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email };
             return View(model);
         }
 
@@ -68,27 +66,6 @@ namespace Labs.Controllers
                 if (user != null)
                 {
                     user.Email = model.Email;
-
-                    if (_context.FindName1(model.Name1)==null)
-                    {
-                        _context.AddName1(model.Name1);
-                    }
-                    user.IdName1 = _context.FindName1(model.Name1).Id;
-                    if (_context.FindName2(model.Name2) == null)
-                    {
-                        _context.AddName2(model.Name2);
-                    }
-                    user.IdName2 = _context.FindName2(model.Name2).Id;
-                    if (!string.IsNullOrEmpty(model.Name3))
-                    {
-                        if (_context.FindName3(model.Name3) == null)
-                        {
-                            _context.AddName3(model.Name3);
-                        }
-                        user.IdName3 = _context.FindName3(model.Name3).Id;
-                    }
-
-
                     bool result = _context.UpdateUser(user.Id, user);
                     if (result)
                     {
@@ -112,7 +89,7 @@ namespace Labs.Controllers
             {
                 return NotFound();
             }
-            var userrole = _context.FindRole(user.RoleId);
+            var userrole = _context.FindRole(user.id_role);
             var allroles = _context.GetAllRoles();
             ViewBag.AllRoles = allroles;
             ChangeRoleViewModel model = new ChangeRoleViewModel { Id = user.Id, Email = user.Email, RoleName = userrole.Name };
@@ -128,7 +105,6 @@ namespace Labs.Controllers
                 if (user != null)
                 {
                     Role role = _context.FindRole(model.RoleName);
-                    //user.RoleId = _context.FindRole(model.RoleName).Id;
 
                     bool result = _context.UpdateRole(user.Id, role);
                     if (result)
@@ -154,7 +130,7 @@ namespace Labs.Controllers
             {
                 return NotFound();
             }
-            var userstatus = _context.FindStatus(user.StatusId);
+            var userstatus = _context.FindStatus(user.id_status);
             var allstatuses = _context.GetAllStatuses();
             ViewBag.AllStatuses = allstatuses;
             ChangeStatusViewModel model = new ChangeStatusViewModel { Id = user.Id, Email = user.Email, StatusName = userstatus.Name, Dateofendblock = DateTime.Now };
@@ -175,20 +151,20 @@ namespace Labs.Controllers
                     {
                         if(model.IsForever==true)        //заблокировать навсегда
                         {
-                            user.StatusId = _context.FindStatus(model.StatusName).Id;
+                            user.id_status = _context.FindStatus(model.StatusName).Id;
                             result = _context.BlockUserForever(user.Id, user);
                         }
                         else                     //заблокировать до времени
                         {
-                            user.StatusId = _context.FindStatus(model.StatusName).Id;
-                            user.dataofbeginblock = DateTime.Now;
-                            user.dataofendbock = model.Dateofendblock;
+                            user.id_status = _context.FindStatus(model.StatusName).Id;
+                            user.dateofbeginblock = DateTime.Now;
+                            user.dateofendbock = model.Dateofendblock;
                             result = _context.BlockUser(user.Id,user);
                         }                 
                     }
                     else          //notblock
                     {
-                        user.StatusId = _context.FindStatus(model.StatusName).Id;
+                        user.id_status = _context.FindStatus(model.StatusName).Id;
                         result = _context.UnblockUser(user.Id,user);
                     }
 

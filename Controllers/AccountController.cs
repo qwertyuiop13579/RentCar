@@ -37,41 +37,38 @@ namespace Labs.Controllers
                 {
                     // добавляем пользователя в бд
                     user = new User { Email = model.Email, Password = UserContext.HashPassword(model.Password) };
-                    Role userRole = _context.FindRole("user");
-                    if (userRole != null)
+                    if(model.issupplier)
                     {
-                        user.RoleId = userRole.Id;
+                        Role userRole = _context.FindRole("supplier");
+                        if (userRole != null)
+                        {
+                            user.id_role = userRole.Id;
+                        }
                     }
+                    else
+                    {
+                        Role userRole = _context.FindRole("user");
+                        if (userRole != null)
+                        {
+                            user.id_role = userRole.Id;
+                        }
+                    }
+                    
                     Status status = _context.FindStatus("notblock");
                     if (status != null)
                     {
-                        user.StatusId = status.Id;
-                    }
-                    if (_context.FindName1(model.Name1)==null)
-                    {
-                        _context.AddName1(model.Name1 );
-                    }
-                    user.IdName1 = _context.FindName1(model.Name1).Id;
-                    if (_context.FindName2(model.Name2)==null)
-                    {
-                        _context.AddName2(model.Name2);                     
-                    }
-                    user.IdName2 = _context.FindName2(model.Name2).Id;
-                    if (!string.IsNullOrEmpty(model.Name3))
-                    {
-                        if (_context.FindName3(model.Name3)==null)
-                        {
-                            _context.AddName3(model.Name3);
-                        }
-                        user.IdName3 = _context.FindName3(model.Name3).Id;
+                        user.id_status = status.Id;
                     }
 
-                    user.dataofregistration = DateTime.Now;
+                    user.dateofregistration = DateTime.Now;
+                    user.id_client = null;
+                    user.dateofbeginblock = new DateTime();
+                    user.dateofendbock = new DateTime();
                     _context.AddNewUser(user);
 
                     await Authenticate(user); // аутентификация
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login");
                 }
             }
             else ModelState.AddModelError("", "Некорректные логин и(или) пароль");
@@ -121,7 +118,7 @@ namespace Labs.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, _context.FindRole(user.RoleId).Name)
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, _context.FindRole(user.id_role).Name)
             };
             // создаем объект ClaimsIdentity
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);

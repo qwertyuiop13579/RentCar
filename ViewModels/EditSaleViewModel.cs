@@ -1,15 +1,15 @@
-﻿using Labs.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Labs.ViewModels
 {
-    public class RentCarViewModel
+    public class EditSaleViewModel
     {
+        public int Id { get; set; }
         public DateTime date1 { get; set; }
+
         public int id_client { get; set; }
         public int id_car { get; set; }
         public DateTime date2 { get; set; }
@@ -18,5 +18,6 @@ namespace Labs.ViewModels
         public DateTime datepay { get; set; }
         public string account_number { get; set; }
         public string payer_number { get; set; }
+        public string status { get; set; }
     }
 }

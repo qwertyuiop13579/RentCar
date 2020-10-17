@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Labs.Models.Sale>
+@{
+    ViewBag.Title = "Список заказов автомобиля";
+}
+
+<table class="table">
+    <tr><th>ID Клиента</th><th>Начало аренды</th><th>Конец аренды</th><th>Цена</th><th>Статус</th></tr>
+    @foreach (var sale in Model)
+    {
+        <tr>
+            <td>@sale.id_client</td>
+            <td>@sale.date2.ToShortDateString()</td>
+            <td>@sale.date3.ToShortDateString()</td>
+            <td>@sale.price</td>
+            <td>@sale.status</td>
+        </tr>
+    }
+</table>

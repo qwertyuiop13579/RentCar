@@ -5,27 +5,56 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <p>@User.Identity.Name</p>
+    <p>Личный кабинет пользователя: @User.Identity.Name</p>
+
+    if (User.IsInRole("user"))
+    {
+        <a asp-controller="Client" asp-action="Create">Личная информация</a>
+        <br />
+        <a asp-controller="Car" asp-action="Index">Автомобили</a>
+        <br />
+        <a asp-controller="Sale" asp-action="IndexByClient">Мои аренды</a>
+        <br />
+    }
+    else if (User.IsInRole("supplier"))
+    {
+        <a asp-controller="Client" asp-action="Create">Личная информация</a>
+        <br />
+        <a asp-controller="Supplier" asp-action="Create">Юридическая информация</a>
+        <br />
+        <a asp-controller="Car" asp-action="Create">Добавить машину</a>
+        <br />
+        <a asp-controller="Car" asp-action="IndexBySupplier">Мои автомобили</a>
+        <br />
+        <a asp-controller="Sale" asp-action="IndexBySupplier">Мои аренды</a>
+    }
+    else if (User.IsInRole("admin"))
+    {
+        <a asp-controller="Users" asp-action="Index">Пользователи</a>
+        <br />
+        <a asp-controller="Supplier" asp-action="Index">Поставщики</a>
+        <br />
+        <a asp-controller="Car" asp-action="Index">Машины</a>
+        <br />
+        <a asp-controller="Sale" asp-action="Index">Заказы</a>
+        <br />
+    }
+    else if (User.IsInRole("manager"))
+    {
+        <a asp-controller="Car" asp-action="Index">Машины</a>
+        <br />
+        <a asp-controller="Sale" asp-action="Index">Заказы</a>
+        <br />
+    }
+
 
     <form method="post" asp-controller="Account" asp-action="Logout">
         <input type="submit" value="Выход" />
     </form>
-
-    <a asp-controller="Users" asp-action="Index">Пользователи</a>
-    <br />
-    <a asp-controller="Bank" asp-action="Index">Банки</a>
-    <br />
-    <a asp-controller="Supplier" asp-action="Index">Поставщики</a>
-    <br />
-    <a asp-controller="Car" asp-action="Index">Машины</a>
-    <br />
-    <a asp-controller="Client" asp-action="Index">Клиенты</a>
-    <br />
-    <a asp-controller="Sale" asp-action="Index">Продажи</a>
-    <br />
 }
 else
 {
     <a asp-controller="Account" asp-action="Login">Вход</a>
+    <br />
     <a asp-controller="Account" asp-action="Register">Регистрация</a>
 }

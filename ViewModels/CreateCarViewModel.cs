@@ -14,6 +14,9 @@ namespace Labs.ViewModels
         public int Year { get; set; }
         public int id_supplier { get; set; }
         public int Price { get; set; }
+        public string status { get; set; }
+        public string country { get; set; }
+        public string city { get; set; }
 
     }
 }

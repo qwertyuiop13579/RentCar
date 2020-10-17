@@ -139,8 +139,6 @@ A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Labs.TagHelpers
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Labs.RazorCoreGenerate.cache
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Account\Login.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Account\Register.cshtml.g.cs
-A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Bank\Create.cshtml.g.cs
-A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Bank\Index.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Create.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Edit.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Index.cshtml.g.cs
@@ -174,3 +172,9 @@ A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\staticwebassets
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Labs.dll
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Labs.pdb
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Labs.genruntimeconfig.cache
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Home\About.cshtml.g.cs
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Supplier\Edit.cshtml.g.cs
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\IndexBySupplier.cshtml.g.cs
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Sale\IndexByCar.cshtml.g.cs
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Sale\IndexBySupplier.cshtml.g.cs
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Sale\IndexByClient.cshtml.g.cs

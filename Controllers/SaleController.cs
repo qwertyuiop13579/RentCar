@@ -23,24 +23,58 @@ namespace Labs.Controllers
             return View(_context.GetAllSales());
         }
 
-        [HttpPost]
-        public IActionResult Delete(int id)
+
+        public IActionResult IndexBySupplier()
         {
-            Car car = _context.FindCar(id);
-            if (car != null)
-            {
-                _context.DeleteCar(id);
-            }
-            return RedirectToAction("Index");
+            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
+            int id_supp = _context.FindSupplierByClient(id_cl).Id;
+
+            return View(_context.GetSalesBySupplier(id_supp));
+        }
+
+        public IActionResult IndexByCar(int id_car)
+        {
+            return View(_context.GetSalesByCar(id_car));
+        }
+
+        public IActionResult IndexByClient()
+        {
+            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
+            return View(_context.GetSalesByClient(id_cl));
         }
 
 
-        public IActionResult Edit(int id)
+        public IActionResult Delete(int id_sale)
         {
+            Sale sale = _context.FindSale(id_sale);
+            if (sale != null)
+            {
+                _context.DeleteSale(id_sale);
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        public IActionResult Edit(int id_sale)
+        {
+            Sale sale = _context.FindSale(id_sale);
+            Payment pay = _context.FindPayment(sale.id_payment);
             if (_context.FindUser(User.Identity.Name).id_client != 0)
             {
-                ViewBag.Banks = new SelectList(_context.GetAllBanks(), "bank_name", "bank_name");
-                var model = new EditRentViewModel() { id_car = id };
+                var model = new EditSaleViewModel() {
+                    Id=sale.Id,
+                    date1 = sale.date1,
+                    id_client = _context.FindUser(User.Identity.Name).id_client.Value,
+                    id_car = sale.id_car,
+                    date2 = sale.date2,
+                    date3 = sale.date3,
+                    price = sale.price,
+                    datepay=pay.date,
+                    account_number=pay.account_number,
+                    payer_number=pay.account_number,
+                    status=sale.status,                 
+                };
                 return View(model);
             }
             else
@@ -50,14 +84,14 @@ namespace Labs.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(EditRentViewModel model)
+        public IActionResult Edit(EditSaleViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Payments pay = new Payments() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
+                Payment pay = new Payment() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
                 int idpay = _context.AddPayment(pay);
 
-                Sales sale = new Sales() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price };
+                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price,status=model.status };
 
                 if (_context.UpdateSale(sale)) return RedirectToAction("Index");
                 else ModelState.AddModelError("", "Ошибка");

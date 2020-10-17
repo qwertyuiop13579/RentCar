@@ -11,14 +11,16 @@ namespace Labs.Models
     public class UserContext
     {
         public string ConnectionString { get; set; }
+        public string NameBD { get; set; }
 
         public UserContext(string connectionString)
         {
             this.ConnectionString = connectionString;
+            this.NameBD = "cardb";
             if (FindRole("admin") == null) AddRole(new Role() { Id = 1, Name = "admin" });
             if (FindRole("user") == null) AddRole(new Role() { Id = 2, Name = "user" });
-            if (FindRole("director") == null) AddRole(new Role() { Id = 3, Name = "director" });
-            if (FindRole("manager") == null) AddRole(new Role() { Id = 4, Name = "manager" });
+            if (FindRole("manager") == null) AddRole(new Role() { Id = 3, Name = "manager" });
+            if (FindRole("supplier") == null) AddRole(new Role() { Id = 4, Name = "supplier" });
             if (FindStatus("notblock") == null) AddStatus(new Status() { Id = 1, Name = "notblock" });
             if (FindStatus("block") == null) AddStatus(new Status() { Id = 2, Name = "block" });
         }
@@ -36,7 +38,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select status.name,password from users inner join status on users.id_status=status.id where email='{email}';", conn);
+                MySqlCommand cmd = new MySqlCommand($"select status.name,password from user inner join status on user.id_status=status.id where email='{email}';", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -54,24 +56,26 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                using MySqlCommand cmd = new MySqlCommand($"select * from users where email = '{email}'", conn);
-                //MySqlCommand cmd = new MySqlCommand($"select * from users where email = '{email}'", conn);
+                using MySqlCommand cmd = new MySqlCommand($"select * from cardb.user where email = '{email}'", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
+                    int? id_cl=null;
+                    string str = reader["id_client"].ToString();
+                    if (reader["id_client"].ToString() == "") id_cl = null;
+                    else id_cl = Convert.ToInt32(reader["id_client"]);
                     user = new User()
                     {
                         Id = Convert.ToInt32(reader["Id"]),
                         Email = reader["email"].ToString(),
                         Password = reader["password"].ToString(),
-                        dataofregistration = Convert.ToDateTime(reader["dataofregistration"]),
-                        RoleId = Convert.ToInt32(reader["id_role"]),
-                        StatusId = Convert.ToInt32(reader["id_status"]),
-                        IdName1 = Convert.ToInt32(reader["idname1"]),
-                        IdName2 = Convert.ToInt32(reader["idname2"]),
-                        IdName3 = Convert.ToInt32(reader["idname3"]),
-                        id_client = Convert.ToInt32(reader["id_client"]),
+                        dateofregistration = Convert.ToDateTime(reader["dateofregistration"]),
+                        id_role = Convert.ToInt32(reader["id_role"]),
+                        id_status = Convert.ToInt32(reader["id_status"]),
+                        dateofbeginblock= Convert.ToDateTime(reader["date_beginblock"]),
+                        dateofendbock = Convert.ToDateTime(reader["date_endblock"]),
+                        id_client = reader["id_client"].ToString()=="" ?(int?)null: Convert.ToInt32(reader["id_client"]),
                     };
                 }
             }
@@ -89,7 +93,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                using MySqlCommand cmd = new MySqlCommand($"select * from users where email = '{email}' and password = '{password}'", conn);
+                using MySqlCommand cmd = new MySqlCommand($"select * from cardb.user where email = '{email}' and password = '{password}'", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -99,13 +103,12 @@ namespace Labs.Models
                         Id = Convert.ToInt32(reader["Id"]),
                         Email = reader["email"].ToString(),
                         Password = reader["password"].ToString(),
-                        dataofregistration = Convert.ToDateTime(reader["dataofregistration"]),
-                        RoleId = Convert.ToInt32(reader["id_role"]),
-                        StatusId = Convert.ToInt32(reader["id_status"]),
-                        IdName1 = Convert.ToInt32(reader["idname1"]),
-                        IdName2 = Convert.ToInt32(reader["idname2"]),
-                        IdName3 = Convert.ToInt32(reader["idname3"]),
-                        id_client = Convert.ToInt32(reader["id_client"]),
+                        dateofregistration = Convert.ToDateTime(reader["dateofregistration"]),
+                        id_role = Convert.ToInt32(reader["id_role"]),
+                        id_status = Convert.ToInt32(reader["id_status"]),
+                        dateofbeginblock = Convert.ToDateTime(reader["date_beginblock"]),
+                        dateofendbock = Convert.ToDateTime(reader["date_endblock"]),
+                        id_client = reader["id_client"].ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_client"]),
                     };
                 }
             }
@@ -121,7 +124,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from users where id = {id}", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from user where id = {id}", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -131,13 +134,12 @@ namespace Labs.Models
                         Id = Convert.ToInt32(reader["Id"]),
                         Email = reader["email"].ToString(),
                         Password = reader["password"].ToString(),
-                        dataofregistration = Convert.ToDateTime(reader["dataofregistration"]),
-                        RoleId = Convert.ToInt32(reader["id_role"]),
-                        StatusId = Convert.ToInt32(reader["id_status"]),
-                        IdName1 = Convert.ToInt32(reader["idname1"]),
-                        IdName2 = Convert.ToInt32(reader["idname2"]),
-                        IdName3 = Convert.ToInt32(reader["idname3"]),
-                        id_client = Convert.ToInt32(reader["id_client"]),
+                        dateofregistration = Convert.ToDateTime(reader["dateofregistration"]),
+                        id_role = Convert.ToInt32(reader["id_role"]),
+                        id_status = Convert.ToInt32(reader["id_status"]),
+                        dateofbeginblock = Convert.ToDateTime(reader["date_beginblock"]),
+                        dateofendbock = Convert.ToDateTime(reader["date_endblock"]),
+                        id_client = reader["id_client"].ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_client"]),
 
                     };
                 }
@@ -153,7 +155,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from roles where name = '{name}'", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from role where name = '{name}'", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -175,7 +177,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from roles where id = {id}", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from role where id = {id}", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -235,425 +237,15 @@ namespace Labs.Models
             else return status;
         }
 
-
-        public Name1 FindName1(string name)
-        {
-            Name1 name1 = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from name1 where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        name1 = new Name1()
-                        {
-                            Id = Convert.ToInt32(reader["id"]),
-                            Name = reader["name"].ToString()
-                        };
-                    }
-                }
-            }
-            return name1;
-        }
-
-        public Name2 FindName2(string name)
-        {
-            Name2 name2 = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from name2 where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        name2 = new Name2() { Id = Convert.ToInt32(reader["Id"]), Name = reader["name"].ToString() };
-                    }
-                }
-            }
-            return name2;
-        }
-
-        public Name3 FindName3(string name)
-        {
-            Name3 name3 = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from name3 where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        name3 = new Name3() { Id = Convert.ToInt32(reader["Id"]), Name = reader["name"].ToString() };
-                    }
-                }
-            }
-            return name3;
-        }
-
-        public Name1 FindName1(int id)
-        {
-            Name1 name1 = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from name1 where id = {id}", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        name1 = new Name1()
-                        {
-                            Id = Convert.ToInt32(reader["id"]),
-                            Name = reader["name"].ToString()
-                        };
-                    }
-                }
-            }
-            return name1;
-        }
-
-        public Name2 FindName2(int id)
-        {
-            Name2 name2 = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from name2 where id = {id}", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        name2 = new Name2() { Id = Convert.ToInt32(reader["Id"]), Name = reader["name"].ToString() };
-                    }
-                }
-            }
-            return name2;
-        }
-
-        public Name3 FindName3(int id)
-        {
-            Name3 name3 = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from name3 where id = {id}", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        name3 = new Name3() { Id = Convert.ToInt32(reader["Id"]), Name = reader["name"].ToString() };
-                    }
-                }
-            }
-            return name3;
-        }
-
-        public Bank FindBank(int id)
-        {
-            Bank bank = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from bank_details where id = {id}", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        bank = new Bank()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            bank_name = reader["bank_name"].ToString(),
-                            innclient = reader["innclient"].ToString(),
-                            bank_account = reader["bank_account"].ToString(),
-                            id_address = Convert.ToInt32(reader["id_address"]),
-                            bank_bik = reader["bank_bik"].ToString(),
-                        };
-                    }
-                }
-            }
-            return bank;
-        }
-
-        public Bank FindBank(string name)
-        {
-            Bank bank = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from bank_details where bank_name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        bank = new Bank()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            bank_name = reader["bank_name"].ToString(),
-                            innclient = reader["innclient"].ToString(),
-                            bank_account = reader["bank_account"].ToString(),
-                            id_address = Convert.ToInt32(reader["id_address"]),
-                            bank_bik = reader["bank_bik"].ToString(),
-                        };
-                    }
-                }
-            }
-            return bank;
-        }
-
-        public Country FindCountry(string name)
-        {
-            Country country = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from country where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        country = new Country()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return country;
-        }
-
-        public Country FindCountry(int id)
-        {
-            Country country = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from country where id = {id};", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        country = new Country()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return country;
-        }
-
-        public Region FindRegion(string name)
-        {
-            Region reg = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from region where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        reg = new Region()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return reg;
-        }
-
-        public Region FindRegion(int id)
-        {
-            Region reg = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from region where id = {id};", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        reg = new Region()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return reg;
-        }
-
-        public District FindDistrict(string name)
-        {
-            District distr = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from district where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        distr = new District()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return distr;
-        }
-
-        public District FindDistrict(int id)
-        {
-            District distr = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from district where id = {id};", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        distr = new District()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return distr;
-        }
-
-
-        public City FindCity(string name)
-        {
-            City city = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from city where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        city = new City()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return city;
-        }
-
-        public City FindCity(int id)
-        {
-            City city = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from city where id={id};", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        city = new City()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return city;
-        }
-
-
-        public Street FindStreet(string name)
-        {
-            Street str = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from street where name = '{name}'", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        str = new Street()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return str;
-        }
-
-        public Street FindStreet(int id)
-        {
-            Street str = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from street where id={id}", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        str = new Street()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            Name = reader["name"].ToString(),
-                        };
-                    }
-                }
-            }
-            return str;
-        }
-
-
         public Address FindAddress(Address addr)
         {
             Address address = null;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string command = $"select * from address where id_country={addr.id_country} and id_region={addr.id_region} and id_district={addr.id_district} and " +
-                    $"id_city={addr.id_city} and type1='{addr.type1}' and type2='{addr.type2}' and id_street={addr.id_street} and num1='{addr.num1}' and num2={addr.num2} and num3='{addr.num3}' and " +
-                    $"address.index={addr.index} and num4={addr.num4} and address.code={addr.code} and mobile={addr.mobile} and email='{addr.email}';";
+                string command = $"select * from address where country='{addr.country}' and " +
+                    $"city='{addr.city}' and type1='{addr.type1}' and type2='{addr.type2}' and street='{addr.street}' and numhouse={addr.numhouse} and numapartment={addr.numapartment} and " +
+                    $"address.index='{addr.index}' and housephone='{addr.housephone}' and mobilephone='{addr.mobilephone}' and email='{addr.email}';";
                 MySqlCommand cmd = new MySqlCommand(command, conn);
 
                 using (var reader = cmd.ExecuteReader())
@@ -663,21 +255,17 @@ namespace Labs.Models
                         address = new Address()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
-                            id_country = Convert.ToInt32(reader["id_country"]),
-                            id_region = Convert.ToInt32(reader["id_region"]),
-                            id_district = Convert.ToInt32(reader["id_district"]),
+                            country = reader["country"].ToString(),
                             type1 = Enum.Parse<TypeCity>(reader["type1"].ToString()),
-                            id_city = Convert.ToInt32(reader["id_city"]),
+                            city = reader["city"].ToString(),
                             type2 = Enum.Parse<TypeStreet>(reader["type2"].ToString()),
-                            id_street = Convert.ToInt32(reader["id_street"]),
-                            num1 = reader["num1"].ToString(),
-                            num2 = Convert.ToInt32(reader["num2"]),
-                            num3 = reader["num3"].ToString(),
-                            index = Convert.ToInt32(reader["index"]),
-                            num4 = Convert.ToInt32(reader["num4"]),
-                            code = Convert.ToInt32(reader["code"]),
-                            mobile = Convert.ToInt32(reader["mobile"]),
-                            email = reader["num4"].ToString(),
+                            street = reader["street"].ToString(),
+                            numhouse = Convert.ToInt32(reader["numhouse"]),
+                            numapartment = Convert.ToInt32(reader["numapartment"]),
+                            index = reader["index"].ToString(),
+                            housephone = reader["housephone"].ToString(),
+                            mobilephone = reader["mobilephone"].ToString(),
+                            email = reader["email"].ToString(),
                         };
                     }
                 }
@@ -702,21 +290,17 @@ namespace Labs.Models
                         address = new Address()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
-                            id_country = Convert.ToInt32(reader["id_country"]),
-                            id_region = Convert.ToInt32(reader["id_region"]),
-                            id_district = Convert.ToInt32(reader["id_district"]),
+                            country = reader["country"].ToString(),
                             type1 = Enum.Parse<TypeCity>(reader["type1"].ToString()),
-                            id_city = Convert.ToInt32(reader["id_city"]),
+                            city = reader["city"].ToString(),
                             type2 = Enum.Parse<TypeStreet>(reader["type2"].ToString()),
-                            id_street = Convert.ToInt32(reader["id_street"]),
-                            num1 = reader["num1"].ToString(),
-                            num2 = Convert.ToInt32(reader["num2"]),
-                            num3 = reader["num3"].ToString(),
-                            index = Convert.ToInt32(reader["index"]),
-                            num4 = Convert.ToInt32(reader["num4"]),
-                            code = Convert.ToInt32(reader["code"]),
-                            mobile = Convert.ToInt32(reader["mobile"]),
-                            email = reader["num4"].ToString(),
+                            street = reader["street"].ToString(),
+                            numhouse = Convert.ToInt32(reader["numhouse"]),
+                            numapartment = Convert.ToInt32(reader["numapartment"]),
+                            index = reader["index"].ToString(),
+                            housephone = reader["housephone"].ToString(),
+                            mobilephone = reader["mobilephone"].ToString(),
+                            email = reader["email"].ToString(),
                         };
                     }
                 }
@@ -725,13 +309,13 @@ namespace Labs.Models
         }
 
 
-        public Supplier FindSupplier(string name)
+        public Supplier FindSupplierByClient(int idcl)
         {
             Supplier supp = null;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from suppliers where firmname = '{name}'", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from {NameBD}.supplier where id_client = '{idcl}'", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -743,7 +327,7 @@ namespace Labs.Models
                             firmname = reader["firmname"].ToString(),
                             id_address = Convert.ToInt32(reader["id_legaladdress"]),
                             unn = reader["unn"].ToString(),
-                            id_bank_details = Convert.ToInt32(reader["id_bank_details"]),
+                            id_client = Convert.ToInt32(reader["id_client"]),
                         };
                     }
                 }
@@ -751,13 +335,14 @@ namespace Labs.Models
             return supp;
         }
 
+
         public Supplier FindSupplier(int id)
         {
             Supplier supp = null;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from suppliers where id = {id}", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from supplier where id = {id}", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -769,12 +354,32 @@ namespace Labs.Models
                             firmname = reader["firmname"].ToString(),
                             id_address = Convert.ToInt32(reader["id_legaladdress"]),
                             unn = reader["unn"].ToString(),
-                            id_bank_details = Convert.ToInt32(reader["id_bank_details"]),
+                            id_client = Convert.ToInt32(reader["id_client"]),
                         };
                     }
                 }
             }
             return supp;
+        }
+
+
+        public int GetIdSupplier(Supplier findsupp)
+        {
+            int id = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand($"select * from supplier where firmname = {findsupp.firmname}", conn);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        id = Convert.ToInt32(reader["Id"]);
+                    }
+                }
+            }
+            return id;
         }
 
 
@@ -784,7 +389,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from cars where id = {id}", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from car where id = {id};", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -800,6 +405,9 @@ namespace Labs.Models
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
+                            country= reader["country"].ToString(),
+                            city = reader["city"].ToString(),
                         };
                     }
                 }
@@ -814,8 +422,8 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from cars where model='{c.Model}' and mark='{c.Mark}' and color='{c.Color}' and goverment_number='{c.Goverment_number}' and " +
-                    $"year={c.Year} and id_supplier={c.id_supplier} and price={c.Price};", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from car where model='{c.Model}' and mark='{c.Mark}' and color='{c.Color}' and goverment_number='{c.Goverment_number}' and " +
+                    $"year={c.Year} and id_supplier={c.id_supplier} and price={c.Price} and status='{car.status}';", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -831,6 +439,9 @@ namespace Labs.Models
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
+                            country = reader["country"].ToString(),
+                            city = reader["city"].ToString(),
                         };
                     }
                 }
@@ -849,7 +460,7 @@ namespace Labs.Models
                 cmd.Connection = conn;
                 string command = $"select * from passport where 'passport1'='{pass.passport1}' and 'passport2'={pass.passport2} and 'passport3'='{pass.passport3}' and 'date1'='{pass.date1.ToString("yyyy-MM-dd")}' " +
                     $"and 'date2'='{pass.date2.ToString("yyyy-MM-dd")}' and 'authority'='{pass.authority}' and 'sex'='{pass.sex.ToString()}' and 'date3'='{pass.date3.ToString("yyyy-MM-dd")}' " +
-                    $"and 'id_name1'={pass.id_name1} and 'id_name2'={pass.id_name2} and 'id_name3'={pass.id_name3};";
+                    $"and 'surname'='{pass.surname}' and 'name'='{pass.name}' and 'patronymic'='{pass.patronymic}';";
 
 
                 cmd.CommandText = command;
@@ -868,9 +479,9 @@ namespace Labs.Models
                             authority = reader["authority"].ToString(),
                             sex = Enum.Parse<Sex>(reader["sex"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            id_name1 = Convert.ToInt32(reader["id_name1"]),
-                            id_name2 = Convert.ToInt32(reader["id_name2"]),
-                            id_name3 = Convert.ToInt32(reader["id_name3"]),
+                            surname = reader["surname"].ToString(),
+                            name = reader["name"].ToString(),
+                            patronymic = reader["patronymic"].ToString(),
                         };
                     }
                 }
@@ -907,9 +518,9 @@ namespace Labs.Models
                             authority = reader["authority"].ToString(),
                             sex = Enum.Parse<Sex>(reader["sex"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            id_name1 = Convert.ToInt32(reader["id_name1"]),
-                            id_name2 = Convert.ToInt32(reader["id_name2"]),
-                            id_name3 = Convert.ToInt32(reader["id_name3"]),
+                            surname = reader["surname"].ToString(),
+                            name = reader["name"].ToString(),
+                            patronymic = reader["patronymic"].ToString(),
                         };
                     }
                 }
@@ -919,77 +530,66 @@ namespace Labs.Models
         }
 
 
-        public Clients FindClient(Clients cl)
+        public int GetIdClient(Client cl)
         {
-            Clients client = null;
+            int id = -1;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"select * from clients where id_passport={cl.id_passport} and id_address={cl.id_address} and id_bank_details={cl.id_bank_details};";
+                string command = $"select * from client where id_passport={cl.id_passport} and id_address={cl.id_address};";
                 cmd.CommandText = command;
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        client = new Clients()
+                        id = Convert.ToInt32(reader["Id"]);
+                    }
+                }
+            }
+            return id;
+
+        }
+
+
+        public Client FindClient(int id)
+        {
+            Client client = null;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand($"select * from client where id={id};", conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        client = new Client()
                         {
-                            Id = Convert.ToInt32(reader["Id"]),
+                            Id = Convert.ToInt32(reader["id"]),
                             id_passport = Convert.ToInt32(reader["id_passport"]),
                             id_address = Convert.ToInt32(reader["id_address"]),
-                            id_bank_details = Convert.ToInt32(reader["id_bank_details"]),
                         };
                     }
                 }
             }
             return client;
-
         }
 
 
-        public Clients FindClient(int id)
+        public Sale FindSale(int id)
         {
-            Clients client = null;
+            Sale sale = null;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"select * from clients where id={id}";
-                cmd.CommandText = command;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        client = new Clients()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            id_passport = Convert.ToInt32(reader["id_passport"]),
-                            id_address = Convert.ToInt32(reader["id_address"]),
-                            id_bank_details = Convert.ToInt32(reader["id_bank_details"]),
-                        };
-                    }
-                }
-            }
-            return client;
-
-        }
-
-
-        public Sales FindSale(int id)
-        {
-            Sales sale = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from sales where id = {id}", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from sale where id = {id}", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        sale = new Sales()
+                        sale = new Sale()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
@@ -1006,20 +606,20 @@ namespace Labs.Models
             return sale;
         }
 
-        public Sales FindSale(Sales s)
+        public Sale FindSale(Sale s)
         {
-            Sales sale = null;
+            Sale sale = null;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from sales where date1='{s.date1.ToString("yyyy-MM-dd")}' and id_client={s.id_client} and id_car={s.id_car} and " +
+                MySqlCommand cmd = new MySqlCommand($"select * from sale where date1='{s.date1.ToString("yyyy-MM-dd")}' and id_client={s.id_client} and id_car={s.id_car} and " +
                     $"id_payment={s.id_payment} and date2='{s.date2.ToString("yyyy-MM-dd")}' and date3='{s.date3.ToString("yyyy-MM-dd")}' and price={s.price};", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        sale = new Sales()
+                        sale = new Sale()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
@@ -1036,56 +636,31 @@ namespace Labs.Models
             return sale;
         }
 
-
-        public bool AddName1(string name1)
+        public Payment FindPayment(int id)
         {
-
+            Payment pay = null;
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO name1(name) VALUES('{name1}');";
-                cmd.CommandText = command;
+                MySqlCommand cmd = new MySqlCommand($"select * from payment where id={id}", conn);
 
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        pay = new Payment()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            date = Convert.ToDateTime(reader["date"].ToString()),
+                            price = Convert.ToInt32(reader["price"]),
+                            account_number = reader["account_number"].ToString(),
+                            payer_number = reader["payer_number"].ToString(),
+                            
+                        };
+                    }
+                }
             }
-        }
-
-        public bool AddName2(string name2)
-        {
-
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO name2(name) VALUES('{name2}');";
-                cmd.CommandText = command;
-
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-        public bool AddName3(string name3)
-        {
-
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO name3(name) VALUES('{name3}');";
-                cmd.CommandText = command;
-
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
+            return pay;
         }
 
 
@@ -1097,162 +672,68 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                /*
-                string command = "INSERT INTO users(Email,password,dataofregistration,id_role,id_status,idname1,idname2,idname3) " +
-                        $"VALUES('{user.Email}','{user.Password}','{user.dataofregistration.ToString("yyyy-MM-dd HH:mm:ss")}',{user.RoleId},{user.StatusId},{user.IdName1},{user.IdName2},{user.IdName3});";
-                        */
-                string command;
-                if (user.dataofbeginblock.Equals(null))
+                string command;                
+                command = $"INSERT INTO `cardb`.`user`(`Email`, `password`, `dateofregistration`, `id_role`, `id_status`, `date_beginblock`, `date_endblock`, `id_client`) VALUES('{ user.Email }', '{ user.Password }', '{ user.dateofregistration.ToString("yyyy-MM-dd HH:mm:ss") }', '{ user.id_role}', '{user.id_status}', '{ user.dateofbeginblock.ToString("yyyy-MM-dd HH:mm:ss") }', '{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss") }', null);";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+        public int AddAddress(Address address)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"INSERT INTO address (`country`, `type1`, `city`, `type2`, `street`, `numhouse`, `numapartment`, `index`, `housephone`, `mobilephone`, `email`) " +
+                    $"VALUES('{address.country}','{address.type1}','{address.city}','{address.type2}','{address.street}','{address.numhouse}',{address.numapartment}," +
+                    $"'{address.index}','{address.housephone}','{address.mobilephone}','{address.email}');";
+
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+
+
+                command = $"select * from address where id=(select max(id) from address);";
+                int id = 0;
+
+                cmd.CommandText = command;
+                using (var reader = cmd.ExecuteReader())
                 {
-                    command = "INSERT INTO users(Email,password,dataofregistration,id_role,id_status,data_beginblock,data_endblock,idname1,idname2,idname3,id_client) " +
-                                        $"VALUES('{user.Email}','{user.Password}','{user.dataofregistration.ToString("yyyy-MM-dd HH:mm:ss")}',{user.RoleId},{user.StatusId}," +
-                                        $"0, 0,{user.IdName1},{user.IdName2},{user.IdName3},{user.id_client});";
+                    if (reader.Read())
+                    {
+                        id = Convert.ToInt32(reader["id"]);
+                    }
                 }
-                else
+                return id;
+            }
+        }
+
+        public int AddSupplier(Supplier supp)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"insert into supplier(firmname,id_legaladdress,unn,id_client) VALUES('{supp.firmname}',{supp.id_address},'{supp.unn}','{supp.id_client}');";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+
+
+                command = $"select * from supplier where id=(select max(id) from supplier);";
+                int id = 0;
+
+                cmd.CommandText = command;
+                using (var reader = cmd.ExecuteReader())
                 {
-                    command = "INSERT INTO users(Email,password,dataofregistration,id_role,id_status,data_beginblock,data_endblock,idname1,idname2,idname3,id_client) " +
-                                        $"VALUES('{user.Email}','{user.Password}','{user.dataofregistration.ToString("yyyy-MM-dd HH:mm:ss")}',{user.RoleId},{user.StatusId}," +
-                                        $"'{user.dataofbeginblock.Value.ToString("yyyy-MM-dd HH:mm:ss")}', '{user.dataofendbock.Value.ToString("yyyy-MM-dd HH:mm:ss")}', " +
-                                        $"{user.IdName1},{user.IdName2},{user.IdName3},{user.id_client});";
+                    if (reader.Read())
+                    {
+                        id = Convert.ToInt32(reader["id"]);
+                    }
                 }
-                /*
-                string command = "INSERT INTO users(Email,password,dataofregistration,id_role,id_status,data_beginblock,data_endblock,idname1,idname2,idname3) " +
-                                        $"VALUES('{user.Email}','{user.Password}','{user.dataofregistration.ToString("yyyy-MM-dd HH:mm:ss")}',{user.RoleId},{user.StatusId}," +
-                                        $"'{(user.dataofbeginblock.Equals(null) ? null : user.dataofbeginblock.Value.ToString("yyyy-MM-dd HH:mm:ss"))}', '{(user.dataofendbock.Equals(null) ? null : user.dataofendbock.Value.ToString("yyyy-MM-dd HH:mm:ss"))}', " +
-                                        $"{user.IdName1},{user.IdName2},{user.IdName3});";*/
-                cmd.CommandText = command;
-
-
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-        public bool AddBank(Bank bank)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command;
-
-                command = "INSERT INTO bank_details(bank_name,innclient,bank_account,id_address,bank_bik) " +
-                                    $"VALUES('{bank.bank_name}','{bank.innclient}','{bank.bank_account}',{bank.id_address},'{bank.bank_bik}');";
-
-                cmd.CommandText = command;
-
-
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-        public bool AddCountry(Country country)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO country (name) SELECT* FROM(SELECT '{country.Name}') AS tmp WHERE NOT EXISTS(SELECT * FROM country WHERE name = '{country.Name}');";
-
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-        public bool AddRegion(Region reg)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO region (name) SELECT* FROM(SELECT '{reg.Name}') AS tmp WHERE NOT EXISTS(SELECT * FROM region WHERE name = '{reg.Name}');";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-        public bool AddDistrict(District distr)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO district (name) SELECT* FROM(SELECT '{distr.Name}') AS tmp WHERE NOT EXISTS(SELECT * FROM district WHERE name = '{distr.Name}');";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-        public bool AddCity(City city)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO city (name) SELECT* FROM(SELECT '{city.Name}') AS tmp WHERE NOT EXISTS(SELECT * FROM city WHERE name = '{city.Name}');";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-        public bool AddStreet(Street street)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO street (name) SELECT* FROM(SELECT '{street.Name}') AS tmp WHERE NOT EXISTS(SELECT * FROM street WHERE name = '{street.Name}');";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-
-        public bool AddAddress(Address address)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"INSERT INTO address (`id_country`, `id_region`, `id_district`, `type1`, `id_city`, `type2`, `id_street`, `num1`, `num2`, `num3`, `index`, `num4`, `code`, `mobile`, `email`) " +
-                    $"VALUES({address.id_country},{address.id_region},{address.id_district},'{address.type1}',{address.id_city},'{address.type2}',{address.id_street},'{address.num1}',{address.num2}," +
-                    $"'{address.num3}',{address.index},{address.num4},{address.code},{address.mobile},'{address.email}');";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-        public bool AddSupplier(Supplier supp)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"insert into suppliers(firmname,id_legaladdress,unn,id_bank_details) " +
-                    $"VALUES('{supp.firmname}',{supp.id_address},'{supp.unn}',{supp.id_bank_details});";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
+                return id;
             }
         }
 
@@ -1263,8 +744,8 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into cars(mark,model,color,goverment_number,year,id_supplier,price) " +
-                    $"VALUES('{car.Mark}','{car.Model}','{car.Color}','{car.Goverment_number}',{car.Year},{car.id_supplier},{car.Price});";
+                string command = $"insert into car(mark,model,color,goverment_number,year,id_supplier,price,status,country,city) " +
+                    $"VALUES('{car.Mark}','{car.Model}','{car.Color}','{car.Goverment_number}',{car.Year},{car.id_supplier},{car.Price},'{car.status}','{car.country}','{car.city}');";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1281,48 +762,13 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into passport(`passport1`,`passport2`, `passport3`, `date1`, `date2`,`authority`,`sex`, `date3`, `id_name1`, `id_name2`, `id_name3`) " +
+                string command = $"insert into passport(`passport1`,`passport2`, `passport3`, `date1`, `date2`,`authority`,`sex`, `date3`, `surname`, `name`, `patronymic`) " +
                     $"VALUES('{pass.passport1}',{pass.passport2},'{pass.passport3}','{pass.date1.ToString("yyyy-MM-dd")}','{pass.date2.ToString("yyyy-MM-dd")}','{pass.authority}'," +
-                    $"'{pass.sex}','{pass.date3.ToString("yyyy-MM-dd")}',{pass.id_name1},{pass.id_name2},{pass.id_name3});";
+                    $"'{pass.sex}','{pass.date3.ToString("yyyy-MM-dd")}','{pass.surname}','{pass.name}','{pass.patronymic}');";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
-
 
                 command = $"select * from passport where id=(select max(id) from passport);";
-
-
-                cmd.CommandText = command;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        id = Convert.ToInt32(reader["id"]);                      
-                    }
-                }
-                return id;
-
-
-                //if (res == 1) return true;
-                //else return false;
-            }
-        }
-
-
-        public int AddClient(Clients cl)
-        {
-            int id = 0;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"insert into clients(`id_passport`, `id_address`, `id_bank_details`) values({cl.id_passport},{cl.id_address},{cl.id_bank_details}); ";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-
-                command = $"select * from clients where id=(select max(id) from clients);";
-
-
                 cmd.CommandText = command;
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -1332,14 +778,11 @@ namespace Labs.Models
                     }
                 }
                 return id;
-
-                //if (res == 1) return true;
-                //else return false;
             }
         }
 
 
-        public int AddPayment(Payments pay)
+        public int AddClient(Client cl)
         {
             int id = 0;
             using (MySqlConnection conn = GetConnection())
@@ -1347,11 +790,37 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into payments(`date`, `price`, `account_number`, `payer_number`) values('{pay.date.ToString("yyyy-MM-dd")}',{pay.price},'{pay.account_number}','{pay.payer_number}'); ";
+                string command = $"insert into client(`id_passport`, `id_address`) values({cl.id_passport},{cl.id_address}); ";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
 
-                command = $"select * from payments where id=(select max(id) from payments);";
+                command = $"select * from client where id=(select max(id) from client);";
+                cmd.CommandText = command;
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        id = Convert.ToInt32(reader["id"]);
+                    }
+                }
+                return id;
+            }
+        }
+
+
+        public int AddPayment(Payment pay)
+        {
+            int id = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"insert into payment(`date`, `price`, `account_number`, `payer_number`) values('{pay.date.ToString("yyyy-MM-dd")}',{pay.price},'{pay.account_number}','{pay.payer_number}'); ";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+
+                command = $"select * from payment where id=(select max(id) from payment);";
 
 
                 cmd.CommandText = command;
@@ -1367,7 +836,7 @@ namespace Labs.Models
         }
 
 
-        public int AddSale(Sales sale)
+        public int AddSale(Sale sale)
         {
             int id = 0;
             using (MySqlConnection conn = GetConnection())
@@ -1375,12 +844,12 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into sales(`date1`,`id_client`,`id_car`,`id_payment`,`date2`,`date3`,`price`) values(now(),{sale.id_client},{sale.id_car}, {sale.id_payment}, " +
-                    $"'{sale.date2.ToString("yyyy-MM-dd")}','{sale.date3.ToString("yyyy-MM-dd")}',{sale.price}); ";
+                string command = $"insert into sale(`date1`,`id_client`,`id_car`,`id_payment`,`date2`,`date3`,`price`,`status`) values(now(),{sale.id_client},{sale.id_car}, {sale.id_payment}, " +
+                    $"'{sale.date2.ToString("yyyy-MM-dd")}','{sale.date3.ToString("yyyy-MM-dd")}',{sale.price},'{sale.status}'); ";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
 
-                command = $"select * from sales where id=(select max(id) from sales);";
+                command = $"select * from sale where id=(select max(id) from sale);";
 
 
                 cmd.CommandText = command;
@@ -1392,177 +861,6 @@ namespace Labs.Models
                     }
                 }
                 return id;
-            }
-        }
-
-        public bool BackupUserAfterDelete(int id)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-
-                string command = "Lock table users write, user_backup read; " +
-                    "INSERT INTO users(id, Email, password, dataofregistration, id_role, id_status, data_beginblock, data_endblock, idname1, idname2, idname3,id_client) " +
-                    "(select id_user, email, password, dataofregistration, id_role, id_status, date_beginblock, date_endblock, idname1, idname2, idname3, id_client from user_backup " +
-                    $"WHERE dateofevent = (SELECT  MAX(dateofevent) from user_backup where type = 'delete') and user_backup.type = 'delete' and id_user={id}); " +
-                    "delete from user_backup where dateofevent = (select * from(SELECT  MAX(dateofevent) from user_backup where user_backup.type = 'delete') as T) and user_backup.type = 'delete';" +
-                    "unlock tables;";
-
-                cmd.CommandText = command;
-
-
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-
-        public bool BackupUserAfterDelete(string email)
-        {
-            User user = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-
-                string command = $"use mydb; select* from user_backup where type = 'delete' and email = '{email}' order by id desc limit 1; ";
-                cmd.CommandText = command;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        DateTime? temp1, temp2;
-                        try
-                        {
-                            temp1 = Convert.ToDateTime(reader["date_beginblock"]);
-                            temp2 = Convert.ToDateTime(reader["date_endblock"]);
-                        }
-                        catch (InvalidCastException)
-                        {
-                            temp1 = null;
-                            temp2 = null;
-                        }
-
-
-                        user = new User()
-                        {
-                            Id = Convert.ToInt32(reader["id_user"]),
-                            Email = reader["email"].ToString(),
-                            Password = reader["password"].ToString(),
-                            dataofregistration = Convert.ToDateTime(reader["dataofregistration"]),
-                            RoleId = Convert.ToInt32(reader["id_role"]),
-                            StatusId = Convert.ToInt32(reader["id_status"]),
-                            dataofbeginblock = temp1,
-                            dataofendbock = temp2,
-                            IdName1 = Convert.ToInt32(reader["idname1"]),
-                            IdName2 = Convert.ToInt32(reader["idname2"]),
-                            IdName3 = Convert.ToInt32(reader["idname3"]),
-                            id_client= Convert.ToInt32(reader["id_client"]),
-                        };
-                    }
-                }
-
-                if (user != null)
-                {
-                    bool result = AddNewUser(user);
-
-                    if (result) return true;
-                    else return false;
-                }
-                return false;
-            }
-        }
-
-        public bool BackupUserAfterUpdate(int id)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-
-                string command = "Lock table users write, user_backup read; " +
-                    $"delete from users where id = {id}; " +
-                    "delete from user_backup where id_user = _id and type = 'delete';" +
-                    "INSERT INTO users(id, Email, password, dataofregistration, id_role, id_status, data_beginblock, data_endblock, idname1, idname2, idname3,id_client) " +
-                    "(select id_user, email, password, dataofregistration, id_role, id_status, date_beginblock, date_endblock, idname1, idname2, idname3, id_client from user_backup " +
-                    "WHERE dateofevent = (SELECT  MAX(dateofevent) from user_backup where type = 'update') and user_backup.type = 'update'and id_user={id}); " +
-                    $"delete from user_backup where dateofevent = (select * from(SELECT  MAX(dateofevent) from user_backup where user_backup.type = 'update') as T) and user_backup.type = 'update' and id_user = {id};" +
-                    "unlock tables;";
-
-
-                string command1 = "use mydb;Lock table users write, user_backup read;SET @DISABLE_TRIGGERS = 1;update users,(select * from user_backup WHERE dateofevent = " +
-                    "(SELECT  MAX(dateofevent) from user_backup where type = 'update' and id_user = 1) and user_backup.type = 'update' and user_backup.id_user = 1) as T2" +
-                    "set users.email = T2.email, users.password = T2.password, users.dataofregistration = T2.dataofregistration, users.id_role = T2.id_role, users.id_status = T2.id_status," +
-                    "users.data_beginblock = T2.date_beginblock, users.data_endblock = T2.date_endblock, users.idname1 = T2.idname1, users.idname2 = T2.idname2, users.idname3 = T2.idname3, users.id_client=T2.id_client" +
-                    "where users.id = T2.id_user;SET @DISABLE_TRIGGERS = 0;unlock tables;";
-
-                cmd.CommandText = command1;
-
-
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
-
-        public bool BackupUserAfterUpdate(string email)
-        {
-            User user = null;
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-
-                string command = $"use mydb; select* from user_backup where type = 'update' and email = '{email}' order by id desc limit 1; ";
-                cmd.CommandText = command;
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        DateTime? temp1, temp2;
-                        try
-                        {
-                            temp1 = Convert.ToDateTime(reader["date_beginblock"]);
-                            temp2 = Convert.ToDateTime(reader["date_endblock"]);
-                        }
-                        catch (InvalidCastException)
-                        {
-                            temp1 = null;
-                            temp2 = null;
-                        }
-
-                        user = new User()
-                        {
-                            Id = Convert.ToInt32(reader["id_user"]),
-                            Email = reader["email"].ToString(),
-                            Password = reader["password"].ToString(),
-                            dataofregistration = Convert.ToDateTime(reader["dataofregistration"]),
-                            RoleId = Convert.ToInt32(reader["id_role"]),
-                            StatusId = Convert.ToInt32(reader["id_status"]),
-                            dataofbeginblock = temp1,
-                            dataofendbock = temp2,
-                            IdName1 = Convert.ToInt32(reader["idname1"]),
-                            IdName2 = Convert.ToInt32(reader["idname2"]),
-                            IdName3 = Convert.ToInt32(reader["idname3"]),
-                            id_client = Convert.ToInt32(reader["id_client"]),
-                        };
-                    }
-                }
-
-                if (user != null)
-                {
-                    bool result = UpdateUser(user.Id, user);
-
-                    if (result) return true;
-                    else return false;
-                }
-                return false;
             }
         }
 
@@ -1573,7 +871,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"delete from users where id={id}";
+                string command = $"delete from user where id={id}";
                 cmd.CommandText = command;
 
 
@@ -1583,21 +881,6 @@ namespace Labs.Models
             }
         }
 
-
-        public bool DeleteBank(int id)
-        {
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                string command = $"delete from bank_details where id={id}";
-                cmd.CommandText = command;
-                int res = cmd.ExecuteNonQuery();
-                if (res == 1) return true;
-                else return false;
-            }
-        }
 
         public bool DeleteSupplier(int id)
         {
@@ -1606,7 +889,23 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"delete from suppliers where id={id}";
+                string command = $"delete from supplier where id={id}";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+
+        public bool DeleteSale(int id)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"delete from sale where id={id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1621,7 +920,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"delete from cars where id={id}";
+                string command = $"delete from car where id={id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1636,7 +935,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"delete from clients where id={id}";
+                string command = $"delete from client where id={id}";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1653,14 +952,14 @@ namespace Labs.Models
                 cmd.Connection = conn;
                 string command;
 
-                if (user.dataofbeginblock.Equals(null))
-                    command = $"Update users set Email='{user.Email}',password='{user.Password}',id_role={user.RoleId},id_status={user.StatusId}," +
-                    $"data_beginblock=null,data_endblock=null," +
-                    $"idname1={user.IdName1},idname2={user.IdName2},idname3={user.IdName3},id_client={user.id_client}  where id={id}";
+                if (user.dateofbeginblock.Equals(null))
+                    command = $"Update user set Email='{user.Email}',password='{user.Password}',id_role={user.id_role},id_status={user.id_status}," +
+                    $"date_beginblock=null,date_endblock=null," +
+                    $"id_client={user.id_client}  where id={id}";
 
-                else command = $"Update users set Email='{user.Email}',password='{user.Password}',id_role={user.RoleId},id_status={user.StatusId}," +
-                $"data_beginblock='{user.dataofbeginblock.Value.ToString("yyyy-MM-dd HH:mm:ss")}',data_endblock='{user.dataofendbock.Value.ToString("yyyy-MM-dd HH:mm:ss")}'," +
-                $"idname1={user.IdName1},idname2={user.IdName2},idname3={user.IdName3},id_client={user.id_client}   where id={id}";
+                else command = $"Update user set Email='{user.Email}',password='{user.Password}',id_role={user.id_role},id_status={user.id_status}," +
+                $"date_beginblock='{user.dateofbeginblock.ToString("yyyy-MM-dd HH:mm:ss")}',date_endblock='{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss")}'," +
+                $"id_client={user.id_client}   where id={id}";
 
 
                 cmd.CommandText = command;
@@ -1683,7 +982,7 @@ namespace Labs.Models
 
 
                 string command = $"update passport set passport1='{pass.passport1}', passport2={pass.passport2}, passport3='{pass.passport3}', date1='{pass.date1}', " +
-                    $"date2='{pass.date2}', authority='{pass.authority}', sex='{pass.sex}', date3='{pass.date3}', id_name1={pass.id_name1}, id_name2={pass.id_name2}, id_name3={pass.id_name3} where id={pass.Id}";
+                    $"date2='{pass.date2}', authority='{pass.authority}', sex='{pass.sex}', date3='{pass.date3}', surname='{pass.surname}', name='{pass.name}', patronymic='{pass.patronymic}' where id={pass.Id}";
 
 
                 cmd.CommandText = command;
@@ -1705,9 +1004,9 @@ namespace Labs.Models
                 cmd.Connection = conn;
 
 
-                string command = $"update address set id_country={addr.id_country}, id_region={addr.id_region}, id_district={addr.id_district}, " +
-    $"id_city={addr.id_city}, type1='{addr.type1}', type2='{addr.type2}', id_street={addr.id_street}, num1='{addr.num1}', num2={addr.num2}, num3='{addr.num3}', " +
-    $"address.index={addr.index}, num4={addr.num4}, address.code={addr.code}, mobile={addr.mobile}, email='{addr.email}' where id={addr.Id}";
+                string command = $"update address set id_country='{addr.country}', " +
+    $"city='{addr.city}', type1='{addr.type1}', type2='{addr.type2}', street='{addr.street}', numhouse='{addr.numhouse}', numapartment='{addr.numapartment}', " +
+    $"address.index='{addr.index}', housephone='{addr.housephone}', mobilephone='{addr.mobilephone}', email='{addr.email}' where id={addr.Id}";
 
                 cmd.CommandText = command;
 
@@ -1719,7 +1018,7 @@ namespace Labs.Models
         }
 
 
-        public bool UpdateClient(Clients cl)
+        public bool UpdateClient(Client cl)
         {
             using (MySqlConnection conn = GetConnection())
             {
@@ -1727,10 +1026,11 @@ namespace Labs.Models
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
 
-                string command = $"update clients set id_passport={cl.id_passport}, id_address={cl.id_address}, id_bank_details={cl.id_bank_details} where id={cl.Id};";
+                string command = $"update client set id_passport={cl.id_passport}, id_address={cl.id_address} where id={cl.Id};";
 
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
+
                 if (res == 1) return true;
                 else return false;
             }
@@ -1745,8 +1045,8 @@ namespace Labs.Models
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
 
-                string command = $"update cars set `mark` = '{car.Mark}',`model` = '{car.Model}', `color` ='{car.Color}', `goverment_number` = '{car.Goverment_number}', `year` = {car.Year}," +
-                    $" `id_supplier` = {car.id_supplier}, `price` = {car.Price} where 'id' = {car.Id};";
+                string command = $"update car set `mark` = '{car.Mark}',`model` = '{car.Model}', `color` ='{car.Color}', `goverment_number` = '{car.Goverment_number}', `year` = {car.Year}," +
+                    $" `id_supplier` = {car.id_supplier}, `price` = {car.Price}, `status`='{car.status}', `country`='{car.country}', `city`='{car.city}' where `id` = {car.Id};";
 
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
@@ -1755,18 +1055,32 @@ namespace Labs.Models
             }
         }
 
-
-
-
-        public bool UpdateSale(Sales sale)
+        public bool UpdateSupplier(Supplier supp)
         {
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"update sales set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car},`id_payment`={sale.id_payment}, " +
-                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd")}',`date3`='{sale.date3.ToString("yyyy-MM-dd")}',`price`={sale.price};";
+                string command = $"update sale set `id_client`={supp.id_client},`firmname`='{supp.firmname}',`id_legaladdress`={supp.id_address}, " +
+                    $"`unn`='{supp.unn}' where id={supp.Id};";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+
+        public bool UpdateSale(Sale sale)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"update sale set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car},`id_payment`={sale.id_payment}, " +
+                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd")}',`date3`='{sale.date3.ToString("yyyy-MM-dd")}',`price`={sale.price}, `status`='{sale.status}'  where id={sale.Id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1781,7 +1095,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"Update users set id_role={role.Id} where id={id}";
+                string command = $"Update user set id_role={role.Id} where id={id}";
                 cmd.CommandText = command;
 
                 int res = cmd.ExecuteNonQuery();
@@ -1797,7 +1111,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"Update users set id_status={status.Id} where id={id}";
+                string command = $"Update user set id_status={status.Id} where id={id}";
                 cmd.CommandText = command;
 
                 int res = cmd.ExecuteNonQuery();
@@ -1815,9 +1129,9 @@ namespace Labs.Models
                 cmd.Connection = conn;
                 string command;
 
-                command = $"use mydb; Update users set id_status={user.StatusId}, data_beginblock='{user.dataofbeginblock.Value.ToString("yyyy-MM-dd HH:mm:ss")}',data_endblock='{user.dataofendbock.Value.ToString("yyyy-MM-dd HH:mm:ss")}' where id={id};" +
-                    $" Drop event if exists unblock_user_{id}; Create event unblock_user_{id} On schedule at '{user.dataofendbock.Value.ToString("yyyy-MM-dd HH:mm:ss")}' Do" +
-                    $" update users set id_status = (select id from status where name = 'notblock'), data_beginblock = 0, data_endblock = 0 where id = {id};";
+                command = $"use {NameBD}; Update user set id_status={user.id_status}, date_beginblock='{user.dateofbeginblock.ToString("yyyy-MM-dd HH:mm:ss")}',date_endblock='{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss")}' where id={id};" +
+                    $" Drop event if exists unblock_user_{id}; Create event unblock_user_{id} On schedule at '{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss")}' Do" +
+                    $" update user set id_status = (select id from status where name = 'notblock'), date_beginblock = 0, date_endblock = 0 where id = {id};";
 
                 cmd.CommandText = command;
 
@@ -1838,7 +1152,7 @@ namespace Labs.Models
                 cmd.Connection = conn;
                 string command;
 
-                command = $"Update users set id_status={user.StatusId}, data_beginblock=0, data_endblock=0 where id={id};";
+                command = $"Update user set id_status={user.id_status}, date_beginblock=0, date_endblock=0 where id={id};";
                 cmd.CommandText = command;
 
 
@@ -1856,7 +1170,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"Update users set id_status={user.StatusId}, data_beginblock=0, data_endblock=0 where id={id};";
+                string command = $"Update user set id_status={user.id_status}, date_beginblock=0, date_endblock=0 where id={id};";
                 cmd.CommandText = command;
 
 
@@ -1874,7 +1188,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = "INSERT INTO roles(id,name) " + $"VALUES({role.Id},'{role.Name}');";
+                string command = "INSERT INTO role(id,name) " + $"VALUES({role.Id},'{role.Name}');";
                 cmd.CommandText = command;
 
 
@@ -1913,7 +1227,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from users", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from cardb.user", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -1924,13 +1238,10 @@ namespace Labs.Models
                             Id = Convert.ToInt32(reader["Id"]),
                             Email = reader["email"].ToString(),
                             Password = reader["password"].ToString(),
-                            dataofregistration = Convert.ToDateTime(reader["dataofregistration"]),
-                            RoleId = Convert.ToInt32(reader["id_role"]),
-                            StatusId = Convert.ToInt32(reader["id_status"]),
-                            IdName1 = Convert.ToInt32(reader["idname1"]),
-                            IdName2 = Convert.ToInt32(reader["idname2"]),
-                            IdName3 = Convert.ToInt32(reader["idname3"]),
-                            id_client = Convert.ToInt32(reader["id_client"]),
+                            dateofregistration = Convert.ToDateTime(reader["dateofregistration"]),
+                            id_role = Convert.ToInt32(reader["id_role"]),
+                            id_status = Convert.ToInt32(reader["id_status"]),
+                            //id_client = Convert.ToInt32(reader["id_client"]),
                         });
                     }
                 }
@@ -1945,7 +1256,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from roles;", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from role;", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -1986,34 +1297,6 @@ namespace Labs.Models
         }
 
 
-        public List<Bank> GetAllBanks()
-        {
-            List<Bank> list = new List<Bank>();
-
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from bank_details", conn);
-
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        list.Add(new Bank()
-                        {
-                            Id = Convert.ToInt32(reader["Id"]),
-                            bank_name = reader["bank_name"].ToString(),
-                            innclient = reader["innclient"].ToString(),
-                            bank_account = reader["bank_account"].ToString(),
-                            id_address = Convert.ToInt32(reader["id_address"]),
-                            bank_bik = reader["bank_bik"].ToString(),
-                        });
-                    }
-                }
-            }
-            return list;
-        }
-
         public List<Supplier> GetAllSuppliers()
         {
             List<Supplier> list = new List<Supplier>();
@@ -2021,7 +1304,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from suppliers", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from supplier", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -2033,8 +1316,6 @@ namespace Labs.Models
                             firmname = reader["firmname"].ToString(),
                             id_address = Convert.ToInt32(reader["id_legaladdress"]),
                             unn = reader["unn"].ToString(),
-                            id_bank_details = Convert.ToInt32(reader["id_bank_details"]),
-
                         });
                     }
                 }
@@ -2049,7 +1330,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from cars", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from car", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -2065,6 +1346,7 @@ namespace Labs.Models
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
                         });
                     }
                 }
@@ -2072,7 +1354,7 @@ namespace Labs.Models
             return list;
         }
 
-        public List<Car> GetAllCars(string mark,string color,int? year)
+        public List<Car> GetAllCars(string mark, string color, int? year)
         {
             List<Car> list = new List<Car>();
 
@@ -2080,36 +1362,36 @@ namespace Labs.Models
             {
                 conn.Open();
                 string command = null;
-                if(string.IsNullOrEmpty(mark) && string.IsNullOrEmpty(color) && year==null)
+                if (string.IsNullOrEmpty(mark) && string.IsNullOrEmpty(color) && year == null)
                 {
-                    command = "select * from cars;";
+                    command = "select * from car;";
                 }
                 else if (string.IsNullOrEmpty(mark) && string.IsNullOrEmpty(color))
                 {
-                    
-                    command = $"select * from cars where year={year};";
+
+                    command = $"select * from car where year={year};";
                 }
                 else if (string.IsNullOrEmpty(mark) && year == null)
                 {
-                    command = $"select * from cars where color='{color}';";
+                    command = $"select * from car where color='{color}';";
                 }
                 else if (string.IsNullOrEmpty(color) && year == null)
                 {
-                    command = $"select * from cars where mark='{mark}';";
+                    command = $"select * from car where mark='{mark}';";
                 }
                 else if (year == null)
                 {
-                    command = $"select * from cars where mark='{mark}' and color='{color}';";
+                    command = $"select * from car where mark='{mark}' and color='{color}';";
                 }
                 else if (string.IsNullOrEmpty(mark))
                 {
-                    command = $"select * from cars where year={year} and color='{color}';";
+                    command = $"select * from car where year={year} and color='{color}';";
                 }
                 else if (string.IsNullOrEmpty(color))
                 {
-                    command = $"select * from cars where year={year} and mark='{mark}';";
+                    command = $"select * from car where year={year} and mark='{mark}';";
                 }
-                else command = $"select * from cars where mark='{mark}' and year={year} and color='{color}';";
+                else command = $"select * from car where mark='{mark}' and year={year} and color='{color}';";
 
 
                 MySqlCommand cmd = new MySqlCommand(command, conn);
@@ -2128,6 +1410,7 @@ namespace Labs.Models
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
                         });
                     }
                 }
@@ -2136,25 +1419,58 @@ namespace Labs.Models
         }
 
 
-        public List<Clients> GetAllClients()
+        public List<Car> GetAllCars(int id_supp)
         {
-            List<Clients> list = new List<Clients>();
+            List<Car> list = new List<Car>();
 
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from clients", conn);
+                string command = $"select * from car where id_supplier={id_supp};";
+                
+                MySqlCommand cmd = new MySqlCommand(command, conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        list.Add(new Clients()
+                        list.Add(new Car()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            Model = reader["model"].ToString(),
+                            Mark = reader["mark"].ToString(),
+                            Color = reader["color"].ToString(),
+                            Goverment_number = reader["model"].ToString(),
+                            Year = Convert.ToInt32(reader["year"]),
+                            id_supplier = Convert.ToInt32(reader["id_supplier"]),
+                            Price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+
+
+        public List<Client> GetAllClients()
+        {
+            List<Client> list = new List<Client>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("select * from client", conn);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Client()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             id_passport = Convert.ToInt32(reader["id_passport"]),
                             id_address = Convert.ToInt32(reader["id_address"]),
-                            id_bank_details = Convert.ToInt32(reader["id_bank_details"]),
 
                         });
                     }
@@ -2163,20 +1479,20 @@ namespace Labs.Models
             return list;
         }
 
-        public List<Sales> GetAllSales()
+        public List<Sale> GetAllSales()
         {
-            List<Sales> list = new List<Sales>();
+            List<Sale> list = new List<Sale>();
 
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from sales", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from sale", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        list.Add(new Sales()
+                        list.Add(new Sale()
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
@@ -2186,6 +1502,99 @@ namespace Labs.Models
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
                             price = Convert.ToInt32(reader["price"]),
+                            status= reader["status"].ToString(),
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+        public List<Sale> GetSalesByCar(int id_car)
+        {
+            List<Sale> list = new List<Sale>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand($"select * from sale where id_car={id_car};", conn);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Sale()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            date1 = Convert.ToDateTime(reader["date1"].ToString()),
+                            id_client = Convert.ToInt32(reader["id_client"]),
+                            id_car = Convert.ToInt32(reader["id_car"]),
+                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            date2 = Convert.ToDateTime(reader["date2"].ToString()),
+                            date3 = Convert.ToDateTime(reader["date3"].ToString()),
+                            price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+        public List<Sale> GetSalesByClient(int id_cl)
+        {
+            List<Sale> list = new List<Sale>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand($"select * from sale where id_client={id_cl}", conn);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Sale()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            date1 = Convert.ToDateTime(reader["date1"].ToString()),
+                            id_client = Convert.ToInt32(reader["id_client"]),
+                            id_car = Convert.ToInt32(reader["id_car"]),
+                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            date2 = Convert.ToDateTime(reader["date2"].ToString()),
+                            date3 = Convert.ToDateTime(reader["date3"].ToString()),
+                            price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
+                        });
+                    }
+                }
+            }
+            return list;
+        }
+
+        public List<Sale> GetSalesBySupplier(int id_supp)
+        {
+            List<Sale> list = new List<Sale>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand($"select * from sale where id_car in (select id from car where id_supplier = {id_supp});", conn);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Sale()
+                        {
+                            Id = Convert.ToInt32(reader["Id"]),
+                            date1 = Convert.ToDateTime(reader["date1"].ToString()),
+                            id_client = Convert.ToInt32(reader["id_client"]),
+                            id_car = Convert.ToInt32(reader["id_car"]),
+                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            date2 = Convert.ToDateTime(reader["date2"].ToString()),
+                            date3 = Convert.ToDateTime(reader["date3"].ToString()),
+                            price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
                         });
                     }
                 }
@@ -2200,7 +1609,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select password from users where email = '{email}'", conn);
+                MySqlCommand cmd = new MySqlCommand($"select password from user where email = '{email}'", conn);
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())

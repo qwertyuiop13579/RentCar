@@ -26,9 +26,8 @@ namespace Labs.Controllers
 
         public IActionResult Create()
         {
-            if (_context.FindUser(User.Identity.Name).id_client == 0)
+            if (_context.FindUser(User.Identity.Name).id_client == null)
             {
-                ViewBag.Banks = new SelectList(_context.GetAllBanks(), "bank_name", "bank_name");
                 return View();
             }
             else return RedirectToAction("Edit", "Client",   new { id = _context.FindUser(User.Identity.Name).id_client } );
@@ -49,70 +48,45 @@ namespace Labs.Controllers
                     date2 = model.date2,
                     authority = model.authority,
                     sex = model.sex,
-                    date3 = model.date3
+                    date3 = model.date3,
+                    surname = model.surname,
+                    name = model.name,
+                    patronymic = model.patronymic,
                 };
-                if (_context.FindName1(model.Name1) == null)
-                {
-                    _context.AddName1(model.Name1);
-                }
-                pass.id_name1 = _context.FindName1(model.Name1).Id;
-                if (_context.FindName2(model.Name2) == null)
-                {
-                    _context.AddName2(model.Name2);
-                }
-                pass.id_name2 = _context.FindName2(model.Name2).Id;
-                if (!string.IsNullOrEmpty(model.Name3))
-                {
-                    if (_context.FindName3(model.Name3) == null)
-                    {
-                        _context.AddName3(model.Name3);
-                    }
-                    pass.id_name3 = _context.FindName3(model.Name3).Id;
-                }
                 int idpass = _context.AddPassport(pass);
 
-                _context.AddCountry(new Country() { Name = model.country });
-                _context.AddRegion(new Region() { Name = model.region });
-                _context.AddDistrict(new District() { Name = model.district });
-                _context.AddCity(new City() { Name = model.city });
-                _context.AddStreet(new Street() { Name = model.street });
                 Address address = new Address()
                 {
-                    id_country = _context.FindCountry(model.country).Id,
-                    id_region = _context.FindRegion(model.region).Id,
-                    id_district = _context.FindDistrict(model.district).Id,
+                    country = model.country,
                     type1 = model.type1,
-                    id_city = _context.FindCity(model.city).Id,
+                    city = model.city,
                     type2 = model.type2,
-                    id_street = _context.FindStreet(model.street).Id,
-                    num1 = model.num1,
-                    num2 = model.num2,
-                    num3 = model.num3,
+                    street = model.street,
+                    numhouse = Convert.ToInt32(model.numhouse),
+                    numapartment = Convert.ToInt32(model.numapartment),
                     index = model.index,
-                    num4 = model.num4,
-                    code = model.code,
-                    mobile = model.mobile,
-                    email = model.email
+                    housephone = model.housephone,
+                    mobilephone = model.mobilephone,
+                    email=model.mobilephone,
+
                 };
-                _context.AddAddress(address);
+                int id_addr=_context.AddAddress(address);
 
 
-                Clients client = new Clients()
+                Client client = new Client()
                 {
-                    //id_passport = _context.FindPassport(pass).Id,
                     id_passport = idpass,
-                    id_address = _context.FindAddress(address).Id,
-                    id_bank_details = _context.FindBank(model.bank_name).Id,
+                    id_address = id_addr,
                 };
 
 
-
-                if (_context.AddClient(client) != 0)
+                int id_cl = _context.AddClient(client);
+                if ( id_cl!= 0)
                 {
                     User user = _context.FindUser(User.Identity.Name);
-                    user.id_client = _context.FindClient(client).Id;
+                    user.id_client = id_cl;
                     _context.UpdateUser(user.Id, user);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index","Home");
                 }
                 else ModelState.AddModelError("", "Ошибка");
 
@@ -124,7 +98,7 @@ namespace Labs.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            Clients client = _context.FindClient(id);
+            Client client = _context.FindClient(id);
             if (client != null)
             {
                 _context.DeleteClient(id);
@@ -136,14 +110,13 @@ namespace Labs.Controllers
 
         public IActionResult Edit(int id)
         {
-            Clients client = _context.FindClient(id);
+            Client client = _context.FindClient(id);
             if (client == null)
             {
                 return NotFound();
             }
             Passport pass = _context.FindPassport(client.id_passport);
             Address addr = _context.FindAddress(client.id_address);
-            Bank bank = _context.FindBank(client.id_bank_details);
             EditClientViewModel model = new EditClientViewModel
             {
                 Id = client.Id,
@@ -155,30 +128,24 @@ namespace Labs.Controllers
                 authority = pass.authority,
                 sex = pass.sex,
                 date3 = pass.date3,
-                Name1 = _context.FindName1(pass.id_name1).Name,
-                Name2 = _context.FindName2(pass.id_name2).Name,
-                Name3 = _context.FindName1(pass.id_name3).Name,
+                surname =pass.surname,
+                name = pass.name,
+                patronymic = pass.patronymic,
 
 
-                country = _context.FindCountry(addr.id_country).Name,
-                region = _context.FindRegion(addr.id_region).Name,
-                district = _context.FindDistrict(addr.id_district).Name,
+                country = addr.country,
                 type1 = addr.type1,
-                city = _context.FindCity(addr.id_city).Name,
+                city = addr.city,
                 type2 = addr.type2,
-                street = _context.FindStreet(addr.id_street).Name,
-                num1 = addr.num1,
-                num2 = addr.num2,
-                num3 = addr.num3,
+                street = addr.street,
+                numhouse = addr.numhouse,
+                numapartment = addr.numapartment,
                 index = addr.index,
-                num4 = addr.num4,
-                code = addr.code,
-                mobile = addr.mobile,
-                email = addr.email,
-
-                bank_name = bank.bank_name,
+                housephone = addr.housephone,
+                mobilephone = addr.mobilephone,
+                email = addr.mobilephone,
             };
-            ViewBag.Banks = new SelectList(_context.GetAllBanks(), "bank_name", "bank_name");
+
             return View(model);
         }
 
@@ -196,66 +163,39 @@ namespace Labs.Controllers
                     date2 = model.date2,
                     authority = model.authority,
                     sex = model.sex,
-                    date3 = model.date3
+                    date3 = model.date3,
+                    surname = model.surname,
+                    name = model.name,
+                    patronymic = model.patronymic,
                 };
-                if (_context.FindName1(model.Name1) == null)
-                {
-                    _context.AddName1(model.Name1);
-                }
-                pass.id_name1 = _context.FindName1(model.Name1).Id;
-                if (_context.FindName2(model.Name2) == null)
-                {
-                    _context.AddName2(model.Name2);
-                }
-                pass.id_name2 = _context.FindName2(model.Name2).Id;
-                if (!string.IsNullOrEmpty(model.Name3))
-                {
-                    if (_context.FindName3(model.Name3) == null)
-                    {
-                        _context.AddName3(model.Name3);
-                    }
-                    pass.id_name3 = _context.FindName3(model.Name3).Id;
-                }
                 int idpass = _context.AddPassport(pass);
                 Address address = new Address()
                 {
-                    id_country = _context.FindCountry(model.country).Id,
-                    id_region = _context.FindRegion(model.region).Id,
-                    id_district = _context.FindDistrict(model.district).Id,
+                    country = model.country,
                     type1 = model.type1,
-                    id_city = _context.FindCity(model.city).Id,
+                    city = model.city,
                     type2 = model.type2,
-                    id_street = _context.FindStreet(model.street).Id,
-                    num1 = model.num1,
-                    num2 = model.num2,
-                    num3 = model.num3,
+                    street = model.street,
+                    numhouse = Convert.ToInt32(model.numhouse),
+                    numapartment = Convert.ToInt32(model.numapartment),
                     index = model.index,
-                    num4 = model.num4,
-                    code = model.code,
-                    mobile = model.mobile,
-                    email = model.email
+                    housephone = model.housephone,
+                    mobilephone = model.mobilephone,
+                    email = model.mobilephone,
                 };
                 _context.AddAddress(address);
 
 
-                Clients client = new Clients()
+                Client client = new Client()
                 {
                     id_passport = idpass,
                     id_address = _context.FindAddress(address).Id,
-                    id_bank_details = _context.FindBank(model.bank_name).Id,
                 };
-                /*
-                _context.UpdateClient(client);
-                User user = _context.FindUser(User.Identity.Name);
-                user.id_client = _context.FindClient(client).Id;
-                _context.UpdateUser(user.Id, user);
-                return RedirectToAction("Index");
-                */
                 
                 if (_context.UpdateClient(client))
                 {
                     User user = _context.FindUser(User.Identity.Name);
-                    user.id_client = _context.FindClient(client).Id;
+                    user.id_client = _context.GetIdClient(client);
                     _context.UpdateUser(user.Id, user);
                     return RedirectToAction("Index");
                 }
