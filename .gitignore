@@ -1,11 +1,5 @@
-Properties/
 [Bb]in/
 [Oo]bj/
-
-Labs.csproj
-Labs.csproj.user
-appsettings.Development.json
-appsettings.json
 
 # Visual Studio 2015
 .vs/
