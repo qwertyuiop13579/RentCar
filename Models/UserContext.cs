@@ -618,8 +618,8 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from sale where date1='{s.date1.ToString("yyyy-MM-dd")}' and id_client={s.id_client} and id_car={s.id_car} and " +
-                    $"id_payment={s.id_payment} and date2='{s.date2.ToString("yyyy-MM-dd")}' and date3='{s.date3.ToString("yyyy-MM-dd")}' and price={s.price};", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from sale where date1='{s.date1.ToString("yyyy-MM-dd HH:mm:ss")}' and id_client={s.id_client} and id_car={s.id_car} and " +
+                    $"id_payment={s.id_payment} and date2='{s.date2.ToString("yyyy-MM-dd HH:mm:ss")}' and date3='{s.date3.ToString("yyyy-MM-dd HH:mm:ss")}' and price={s.price};", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -853,7 +853,7 @@ namespace Labs.Models
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
                 string command = $"insert into sale(`date1`,`id_client`,`id_car`,`id_payment`,`date2`,`date3`,`price`,`status`) values(now(),{sale.id_client},{sale.id_car}, {sale.id_payment}, " +
-                    $"'{sale.date2.ToString("yyyy-MM-dd")}','{sale.date3.ToString("yyyy-MM-dd")}',{sale.price},'{sale.status}'); ";
+                    $"'{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}','{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',{sale.price},'{sale.status}'); ";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
 
@@ -872,21 +872,23 @@ namespace Labs.Models
             }
         }
 
-        public bool CanAddSale(Sale sale)
+        public int CanAddSale(Sale sale)
         {
-            bool res = true;
-            var sales = GetSalesByCar(sale.id_car);
+            if (sale.date2 > sale.date3 || sale.date2.AddSeconds(59) < DateTime.Now || sale.date3.AddSeconds(59) < DateTime.Now)
+            {
+                return 1;
+            }
 
+            var sales = GetSalesByCar(sale.id_car);
             foreach(Sale s in sales)
             {
-                if((sale.date2>s.date2&&sale.date2<s.date3)|| (sale.date3 > s.date2 && sale.date3 < s.date3)||sale.date2>sale.date3)
+                if((sale.date2>s.date2&&sale.date2<s.date3)|| (sale.date3 > s.date2 && sale.date3 < s.date3))
                 {
-                    res = false;
-                    break;
+                    return 2;
                 }
                     
             }
-            return res;
+            return 0;
         }
 
         public bool DeleteUser(int id)
@@ -1154,7 +1156,7 @@ namespace Labs.Models
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
                 string command = $"update sale set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car},`id_payment`={sale.id_payment}, " +
-                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd")}',`date3`='{sale.date3.ToString("yyyy-MM-dd")}',`price`={sale.price}, `status`='{sale.status}'  where id={sale.Id};";
+                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}',`date3`='{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',`price`={sale.price}, `status`='{sale.status}'  where id={sale.Id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;

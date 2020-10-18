@@ -142,7 +142,6 @@ A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Acc
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Create.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Edit.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Index.cshtml.g.cs
-A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Rent.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Client\Create.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Client\Edit.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Client\Index.cshtml.g.cs

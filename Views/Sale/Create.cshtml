@@ -7,11 +7,11 @@
     <input type="hidden" asp-for="id_car" value="@Model.id_car" class="form-control" />
     <div class="form-group">
         <label asp-for="date2" class="control-label">Начало аренды</label>
-        <input type="datetime-local" asp-for="date2" class="form-control" />
+        <input type="datetime-local" asp-for="date2" class="form-control" id="inputdate2"/>
     </div>
     <div class="form-group">
         <label asp-for="date3" class="control-label">Окончание аренды</label>
-        <input type="datetime-local" asp-for="date3" class="form-control" />
+        <input type="datetime-local" asp-for="date3" class="form-control" id="inputdate3"/>
     </div>
     <div class="form-group">
         <label asp-for="datepay" class="control-label">Дата оплаты</label>
@@ -34,3 +34,12 @@
     </div>
 </form>
 <a asp-controller="Car" asp-action="Index" class="btn btn-primary">Отмена</a>
+@section scripts{
+    <script type="text/javascript">
+        const inputdate2 = document.getElementById("inputdate2");
+        inputdate2.value = new Date();
+        const inputdate3 = document.getElementById("inputdate3");
+        inputdate3.value = new Date();
+
+    </script>
+}

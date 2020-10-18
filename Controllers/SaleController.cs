@@ -62,15 +62,21 @@ namespace Labs.Controllers
         public IActionResult Create(CreateSaleViewModel model)
         {
             if (ModelState.IsValid)
-            {              
+            {
                 Payment pay = new Payment() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
                 int idpay = _context.AddPayment(pay);
 
                 Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price, status = "Обрабатывается" };
-                
-                if (_context.CanAddSale(sale) != true)
+
+                int canadd = _context.CanAddSale(sale);
+                if (canadd == 1)     //проверка на корректность
                 {
-                    ModelState.AddModelError("", "В это время машина занята.");
+                    ModelState.AddModelError("", "Неверное время.");
+                    return View(model);
+                }
+                else if (canadd == 2)    //проверка на занятость
+                {
+                    ModelState.AddModelError("", "Автомобиль забронирован.");
                     return View(model);
                 }
 
@@ -130,18 +136,19 @@ namespace Labs.Controllers
             Payment pay = _context.FindPayment(sale.id_payment);
             if (_context.FindUser(User.Identity.Name).id_client != 0)
             {
-                var model = new EditSaleViewModel() {
-                    Id=sale.Id,
+                var model = new EditSaleViewModel()
+                {
+                    Id = sale.Id,
                     date1 = sale.date1,
                     id_client = _context.FindUser(User.Identity.Name).id_client.Value,
                     id_car = sale.id_car,
                     date2 = sale.date2,
                     date3 = sale.date3,
                     price = sale.price,
-                    datepay=pay.date,
-                    account_number=pay.account_number,
-                    payer_number=pay.account_number,
-                    status=sale.status,                 
+                    datepay = pay.date,
+                    account_number = pay.account_number,
+                    payer_number = pay.account_number,
+                    status = sale.status,
                 };
                 return View(model);
             }
@@ -159,7 +166,7 @@ namespace Labs.Controllers
                 Payment pay = new Payment() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
                 int idpay = _context.AddPayment(pay);
 
-                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price,status=model.status };
+                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price, status = model.status };
 
                 if (_context.UpdateSale(sale)) return RedirectToAction("Index");
                 else ModelState.AddModelError("", "Ошибка");
