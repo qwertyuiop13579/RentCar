@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -408,6 +409,8 @@ namespace Labs.Models
                             status = reader["status"].ToString(),
                             country= reader["country"].ToString(),
                             city = reader["city"].ToString(),
+                            Image = reader["image"].ToString(),
+                            ImageMimeType = reader["imagemimetype"].ToString(),
                         };
                     }
                 }
@@ -442,6 +445,8 @@ namespace Labs.Models
                             status = reader["status"].ToString(),
                             country = reader["country"].ToString(),
                             city = reader["city"].ToString(),
+                            Image = reader["image"].ToString(),
+                            ImageMimeType = reader["imagemimetype"].ToString(),
                         };
                     }
                 }
@@ -599,6 +604,7 @@ namespace Labs.Models
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
                             price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
                         };
                     }
                 }
@@ -629,6 +635,7 @@ namespace Labs.Models
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
                             price = Convert.ToInt32(reader["price"]),
+                            status = reader["status"].ToString(),
                         };
                     }
                 }
@@ -744,8 +751,9 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into car(mark,model,color,goverment_number,year,id_supplier,price,status,country,city) " +
-                    $"VALUES('{car.Mark}','{car.Model}','{car.Color}','{car.Goverment_number}',{car.Year},{car.id_supplier},{car.Price},'{car.status}','{car.country}','{car.city}');";
+                string command = $"insert into car(mark,model,color,goverment_number,year,id_supplier,price,status,country,city,image,imagemimetype) " +
+                    $"VALUES('{car.Mark}','{car.Model}','{car.Color}','{car.Goverment_number}',{car.Year},{car.id_supplier},{car.Price},'{car.status}','{car.country}'," +
+                    $"'{car.city}','{car.Image}','{car.ImageMimeType}');";  //System.Text.Encoding.Default.GetString(car.Image)
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -864,6 +872,23 @@ namespace Labs.Models
             }
         }
 
+        public bool CanAddSale(Sale sale)
+        {
+            bool res = true;
+            var sales = GetSalesByCar(sale.id_car);
+
+            foreach(Sale s in sales)
+            {
+                if((sale.date2>s.date2&&sale.date2<s.date3)|| (sale.date3 > s.date2 && sale.date3 < s.date3)||sale.date2>sale.date3)
+                {
+                    res = false;
+                    break;
+                }
+                    
+            }
+            return res;
+        }
+
         public bool DeleteUser(int id)
         {
             using (MySqlConnection conn = GetConnection())
@@ -899,6 +924,21 @@ namespace Labs.Models
 
 
         public bool DeleteSale(int id)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"delete from sale where id={id};";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+        public bool CancelSale(int id)
         {
             using (MySqlConnection conn = GetConnection())
             {
@@ -1046,8 +1086,42 @@ namespace Labs.Models
                 cmd.Connection = conn;
 
                 string command = $"update car set `mark` = '{car.Mark}',`model` = '{car.Model}', `color` ='{car.Color}', `goverment_number` = '{car.Goverment_number}', `year` = {car.Year}," +
-                    $" `id_supplier` = {car.id_supplier}, `price` = {car.Price}, `status`='{car.status}', `country`='{car.country}', `city`='{car.city}' where `id` = {car.Id};";
+                    $" `id_supplier` = {car.id_supplier}, `price` = {car.Price}, `status`='{car.status}', `country`='{car.country}', `city`='{car.city}',`image`='{car.Image}',`imagemimetype`='{car.ImageMimeType}'  where `id` = {car.Id};";
 
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+        public bool UpdateCarWithoutImage(Car car)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+
+                string command = $"update car set `mark` = '{car.Mark}',`model` = '{car.Model}', `color` ='{car.Color}', `goverment_number` = '{car.Goverment_number}', `year` = {car.Year}," +
+                    $" `id_supplier` = {car.id_supplier}, `price` = {car.Price}, `status`='{car.status}', `country`='{car.country}', `city`='{car.city}'  where `id` = {car.Id};";
+
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+
+        public bool UpdateCarStatus(int id,string status)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"update car set `status`='{status}'  where `id` = {id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1088,6 +1162,22 @@ namespace Labs.Models
             }
         }
 
+        public bool UpdateSaleStatus(int id,string st)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"update sale set `status`='{st}'  where id={id};";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+
         public bool UpdateRole(int id, Role role)
         {
             using (MySqlConnection conn = GetConnection())
@@ -1114,6 +1204,47 @@ namespace Labs.Models
                 string command = $"Update user set id_status={status.Id} where id={id}";
                 cmd.CommandText = command;
 
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+
+        public bool CreateEventStatusCar(Sale sale)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command;
+
+                command = $"use {NameBD};" +
+                    $" Create event set_status_car_{sale.Id} On schedule at '{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}' Do update car set status = 'Используется' where id = {sale.id_car};" +
+                    $" Create event remove_status_car_{sale.Id} On schedule at '{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}' Do update car set status = 'Свободен' where id = {sale.id_car};";
+
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+        public bool DropEventStatusCar(Sale sale)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command;
+
+                command = $"use {NameBD};" +
+                    $"Drop event if exists set_status_car_{sale.Id}; " +
+                    $"Drop event if exists remove_status_car_{sale.Id}; ";
+
+                cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
                 else return false;
@@ -1347,6 +1478,8 @@ namespace Labs.Models
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
                             status = reader["status"].ToString(),
+                            Image= reader["image"].ToString(),
+                            ImageMimeType=reader["imagemimetype"].ToString(),
                         });
                     }
                 }
@@ -1411,6 +1544,8 @@ namespace Labs.Models
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
                             status = reader["status"].ToString(),
+                            Image = reader["image"].ToString(),
+                            ImageMimeType = reader["imagemimetype"].ToString(),
                         });
                     }
                 }
@@ -1445,6 +1580,8 @@ namespace Labs.Models
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
                             status = reader["status"].ToString(),
+                            Image = reader["image"].ToString(),
+                            ImageMimeType = reader["imagemimetype"].ToString(),
                         });
                     }
                 }

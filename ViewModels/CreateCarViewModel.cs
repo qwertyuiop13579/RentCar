@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,6 @@ namespace Labs.ViewModels
         public string status { get; set; }
         public string country { get; set; }
         public string city { get; set; }
-
+        public IFormFile Image { get; set; }
     }
 }

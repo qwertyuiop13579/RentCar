@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Изменение машины";
 }
-<form asp-action="Edit" asp-controller="Car">
+<form asp-action="Edit" asp-controller="Car" enctype="multipart/form-data" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" asp-for="status" value=@Model.status />
     <input type="hidden" asp-for="Id" value=@Model.Id />
@@ -40,7 +40,36 @@
         <input type="text" asp-for="city" class="form-control" />
     </div>
     <div class="form-group">
+        <label asp-for="Image" class="control-label">Фото</label>
+        <input type="file" id="imageinput" asp-for="Image" name="Image" accept="image/*" />
+    </div>
+    <div id="preview">
+        <img class="imgcar1" src="@Url.Action("GetImage", "Car", new { id=Model.Id })" />
+    </div>
+    <br />
+    <div class="form-group">
         <input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
     </div>
 </form>
-<a  href='javascript:history.go(-1)' class="btn btn-primary">Отмена</a>
+<a href='javascript:history.go(-1)' class="btn btn-primary">Отмена</a>
+
+
+@section scripts{
+    <script type="text/javascript">
+        const inputElement = document.getElementById("imageinput");
+        inputElement.files[0] = 
+        inputElement.addEventListener("change", function (e) {
+            var file = inputElement.files[0];
+            var preview = document.getElementById("preview");
+            preview.innerHTML = "";
+            var img = document.createElement("img");
+            img.classList.add("imgcar1");
+            img.file = file;           
+            preview.appendChild(img);
+            var reader = new FileReader();
+            reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
+            reader.readAsDataURL(file);
+        }, false);
+
+    </script>
+}

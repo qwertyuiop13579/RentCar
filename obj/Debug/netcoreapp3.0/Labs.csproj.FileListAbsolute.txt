@@ -178,3 +178,4 @@ A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Sale\IndexByCar.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Sale\IndexBySupplier.cshtml.g.cs
 A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Sale\IndexByClient.cshtml.g.cs
+A:\Progs\Labs\7Sem\CarInternet\Labs\Labs\obj\Debug\netcoreapp3.0\Razor\Views\Car\Details.cshtml.g.cs

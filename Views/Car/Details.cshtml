@@ -1,0 +1,38 @@
+﻿@model Labs.Models.Car
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>Автомобиль @Model.Mark @Model.Model</h4>
+    </div>
+    <!--    <img alt="car" class="imgcar" style="width: 200px; height: 160px;" src="data:image/jpeg;base64,@(Model.Image)" />         -->
+    <img class="imgcar3" src="@Url.Action("GetImage", "Car", new { Model.Id })" />
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+
+            <dt>Марка</dt>
+            <dd>@Html.DisplayFor(model => model.Mark)</dd>
+
+            <dt>Название модели:</dt>
+            <dd>@Html.DisplayFor(model => model.Model)</dd>
+
+            <dt>Цвет</dt>
+            <dd>@Html.DisplayFor(model => model.Color)</dd>
+
+            <dt>Номер</dt>
+            <dd>@Html.DisplayFor(model => model.Goverment_number)</dd>
+
+            <dt>Год выпуска</dt>
+            <dd>@Html.DisplayFor(model => model.Year)</dd>
+
+            <dt>Страна</dt>
+            <dd>@Html.DisplayFor(model => model.country)</dd>
+
+            <dt>Город</dt>
+            <dd>@Html.DisplayFor(model => model.city)</dd>
+        </dl>
+    </div>   
+</div>
+<br />
+<a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+<br />
+<br />
+<a class="btn btn-sm btn-primary" href='javascript:history.go(-1)'>Назад</a>

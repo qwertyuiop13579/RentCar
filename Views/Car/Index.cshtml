@@ -18,19 +18,21 @@
 </form>
 
 <table class="table">
-    <tr><th>Марка</th><th>Модель</th><th>Год</th><th>Цвет</th><th>Цена/час</th></tr>
+    <tr><th>Фото</th><th>Марка</th><th>Модель</th><th>Цена/час</th></tr>
     @foreach (var car in Model)
     {
-<tr>
-    <td>@car.Mark</td>
-    <td>@car.Model</td>
-    <td>@car.Year</td>
-    <td>@car.Color</td>
-    <td>@car.Price</td>
-    <td>
-        <a class="btn btn-sm btn-primary" asp-controller="Car"  asp-action="Rent" asp-route-id="@car.Id">Аренда</a>
+        <tr>
+            <td>
+                <img class="imgcar2" onclick="@Url.Action("Details", "Car", new { id=car.Id })" src="@Url.Action("GetImage", "Car", new { id=car.Id })" />
+            </td>
+            <td>@car.Mark</td>
+            <td>@car.Model</td>
+            <td>@car.Price</td>
+            <td>
+                <a class="btn btn-sm btn-primary btndetails" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">Подробности</a>
+            </td>
 
-    </td>
-</tr>
+        </tr>
+
     }
 </table>

@@ -14,8 +14,7 @@
             <td>@sale.price</td>
             <td>@sale.status</td>
             <td>
-                <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="Delete" asp-route-id_sale="@sale.Id">Удалить</a>
-                <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Edit" asp-route-id_sale="@sale.Id">Изменить</a>
+                <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="Cancel" asp-route-id_sale="@sale.Id">Отменить</a>
             </td>
         </tr>
     }
