@@ -1,5 +1,6 @@
 ﻿using Labs.Models;
 using Labs.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Labs.Controllers
 {
+    [Authorize]
     public class SaleController : Controller
     {
         private UserContext _context;
@@ -26,10 +28,17 @@ namespace Labs.Controllers
 
         public IActionResult IndexBySupplier()
         {
-            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
-            int id_supp = _context.FindSupplierByClient(id_cl).Id;
+            int? id_cl = _context.FindUser(User.Identity.Name).id_client;
 
+            if (id_cl == null) return RedirectToAction("Create", "Client");
+
+            Supplier supp = _context.FindSupplierByClient(id_cl.Value);
+            if(supp==null) return RedirectToAction("Create", "Supplier");
+            int id_supp =supp.Id;
             return View(_context.GetSalesBySupplier(id_supp));
+            
+
+            
         }
 
         public IActionResult IndexByCar(int id_car)
@@ -39,15 +48,24 @@ namespace Labs.Controllers
 
         public IActionResult IndexByClient()
         {
-            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
-            return View(_context.GetSalesByClient(id_cl));
+            int? id_cl = _context.FindUser(User.Identity.Name).id_client;
+            if (id_cl != null)
+            {
+                return View(_context.GetSalesByClient(id_cl.Value));
+            }
+            else
+            {
+                return RedirectToAction("Create", "Client");
+            }
         }
 
 
 
         public IActionResult Create(int id_c)
         {
-            if (_context.FindUser(User.Identity.Name).id_client != 0)
+            //if(User.Identity.Name==null) return RedirectToAction("Create", "Client");
+            int? id_cl = _context.FindUser(User.Identity.Name).id_client;
+            if (id_cl != null)
             {
                 var model = new CreateSaleViewModel() { id_car = id_c };
                 return View(model);

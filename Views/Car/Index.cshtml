@@ -5,15 +5,17 @@
 <form method="get">
     <div class="form-inline form-group">
         <label class="control-label">Марка: </label>
-        <input name="mark" class="form-control" />
+        <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
 
-        <label class="control-label">Цвет: </label>
-        <input name="color" class="form-control" />
+        <label class="control-label">Min Год: </label>
+        <input type="number" name="yearmin" class="form-control"/>
 
-        <label class="control-label">Год: </label>
-        <input type="number" name="year" class="form-control" />
+        <label class="control-label">Max Год: </label>
+        <input type="number" name="yearmax" class="form-control"/>
 
         <input type="submit" value="Поиск" class="btn btn-sm btn-primary" />
+
+        <a asp-controller="Car" asp-action="Index" class="btn btn-primary">Отмена</a>
     </div>
 </form>
 

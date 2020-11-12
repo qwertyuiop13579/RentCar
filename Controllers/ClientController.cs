@@ -108,6 +108,23 @@ namespace Labs.Controllers
 
 
 
+        public ActionResult Details(int id)
+        {
+            Client client = _context.FindClient(id);
+            Passport pass = _context.FindPassport(client.id_passport);
+            Address addr = _context.FindAddress(client.id_address);
+
+            ClientDetails cldet = new ClientDetails() { surname = pass.surname, name = pass.name, patronymic = pass.patronymic, country = addr.country, city = addr.city, mobilephone = addr.mobilephone, email = addr.email };
+
+            if (client != null)
+            {
+                return View(cldet);
+            }
+            return NotFound();
+        }
+
+
+
         public IActionResult Edit(int id)
         {
             Client client = _context.FindClient(id);

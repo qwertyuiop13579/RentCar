@@ -23,20 +23,23 @@ namespace Labs.Controllers
             return View(_context.GetAllSuppliers());
         }
 
-        public IActionResult Create()
+        public ActionResult Create()
         {
-            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
-            int id_supp = _context.FindSupplierByClient(id_cl).Id;
-            if (_context.FindUser(User.Identity.Name).id_client == 0)
+            int? id_cl = _context.FindUser(User.Identity.Name).id_client;
+
+            if (id_cl == null)
             {
                 return RedirectToAction("Create", "Client");
-                
             }
-            else if(id_supp!=0)
+            else
             {
-                return RedirectToAction("Edit", "Supplier", new { id = id_supp });
+                Supplier supp = _context.FindSupplierByClient(id_cl.Value);
+                if (supp == null) return View();
+                else
+                {
+                    return RedirectToAction("Edit", "Supplier", new { id = supp.Id });
+                }
             }
-            else return View();
         }
 
         [HttpPost]
@@ -100,8 +103,8 @@ namespace Labs.Controllers
                 index = addr.index,
                 housephone = addr.housephone,
                 mobilephone = addr.mobilephone,
-                email = addr.mobilephone,  
-    };
+                email = addr.mobilephone,
+            };
 
             return View(model);
         }
@@ -126,8 +129,8 @@ namespace Labs.Controllers
                     mobilephone = model.mobilephone,
                     email = model.mobilephone,
                 };
-               int id_addr= _context.AddAddress(address);
-               int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
+                int id_addr = _context.AddAddress(address);
+                int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
                 Supplier supp = new Supplier()
                 {
                     firmname = model.firmname,
@@ -138,7 +141,7 @@ namespace Labs.Controllers
 
                 if (_context.UpdateSupplier(supp))
                 {
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 else ModelState.AddModelError("", "Ошибка");
             }

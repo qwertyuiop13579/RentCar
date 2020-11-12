@@ -1,11 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
+using MySqlConnector;
 
 namespace Labs.Models
 {
@@ -17,7 +13,7 @@ namespace Labs.Models
         public UserContext(string connectionString)
         {
             this.ConnectionString = connectionString;
-            this.NameBD = "cardb";
+            this.NameBD = "rentcardb";
             if (FindRole("admin") == null) AddRole(new Role() { Id = 1, Name = "admin" });
             if (FindRole("user") == null) AddRole(new Role() { Id = 2, Name = "user" });
             if (FindRole("manager") == null) AddRole(new Role() { Id = 3, Name = "manager" });
@@ -57,7 +53,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                using MySqlCommand cmd = new MySqlCommand($"select * from cardb.user where email = '{email}'", conn);
+                using MySqlCommand cmd = new MySqlCommand($"select * from {NameBD}.user where email = '{email}'", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -94,7 +90,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                using MySqlCommand cmd = new MySqlCommand($"select * from cardb.user where email = '{email}' and password = '{password}'", conn);
+                using MySqlCommand cmd = new MySqlCommand($"select * from {NameBD}.user where email = '{email}' and password = '{password}'", conn);
 
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
@@ -680,7 +676,7 @@ namespace Labs.Models
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
                 string command;                
-                command = $"INSERT INTO `cardb`.`user`(`Email`, `password`, `dateofregistration`, `id_role`, `id_status`, `date_beginblock`, `date_endblock`, `id_client`) VALUES('{ user.Email }', '{ user.Password }', '{ user.dateofregistration.ToString("yyyy-MM-dd HH:mm:ss") }', '{ user.id_role}', '{user.id_status}', '{ user.dateofbeginblock.ToString("yyyy-MM-dd HH:mm:ss") }', '{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss") }', null);";
+                command = $"INSERT INTO `{NameBD}`.`user`(`Email`, `password`, `dateofregistration`, `id_role`, `id_status`, `date_beginblock`, `date_endblock`, `id_client`) VALUES('{ user.Email }', '{ user.Password }', '{ user.dateofregistration.ToString("yyyy-MM-dd HH:mm:ss") }', '{ user.id_role}', '{user.id_status}', '{ user.dateofbeginblock.ToString("yyyy-MM-dd HH:mm:ss") }', '{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss") }', null);";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1360,7 +1356,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from cardb.user", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from {NameBD}.user", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -1489,44 +1485,46 @@ namespace Labs.Models
             return list;
         }
 
-        public List<Car> GetAllCars(string mark, string color, int? year)
+        public List<Car> GetAllCars(string mark, int? yearmin, int? yearmax)
         {
             List<Car> list = new List<Car>();
 
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string command = null;
-                if (string.IsNullOrEmpty(mark) && string.IsNullOrEmpty(color) && year == null)
+                string command = "select * from car ";
+                bool hascr = false;
+                if(mark!="Все")
                 {
-                    command = "select * from car;";
+                    if (hascr) command += $" and mark='{mark}'";
+                    else
+                    {
+                        command += $" where mark='{mark}'";
+                        hascr = true;
+                    }
                 }
-                else if (string.IsNullOrEmpty(mark) && string.IsNullOrEmpty(color))
+                else { }
+                if (yearmin!=null)
                 {
+                    if (hascr) command += $" and year>={yearmin} ";
+                    else
+                    {
+                        command += $" where year>={yearmin} ";
+                        hascr = true;
+                    }
+                }
+                if (yearmax != null)
+                {
+                    if (hascr) command += $" and year<={yearmax} ";
+                    else
+                    {
+                        command += $" where year<={yearmax} ";
+                        hascr = true;
+                    }
+                }
 
-                    command = $"select * from car where year={year};";
-                }
-                else if (string.IsNullOrEmpty(mark) && year == null)
-                {
-                    command = $"select * from car where color='{color}';";
-                }
-                else if (string.IsNullOrEmpty(color) && year == null)
-                {
-                    command = $"select * from car where mark='{mark}';";
-                }
-                else if (year == null)
-                {
-                    command = $"select * from car where mark='{mark}' and color='{color}';";
-                }
-                else if (string.IsNullOrEmpty(mark))
-                {
-                    command = $"select * from car where year={year} and color='{color}';";
-                }
-                else if (string.IsNullOrEmpty(color))
-                {
-                    command = $"select * from car where year={year} and mark='{mark}';";
-                }
-                else command = $"select * from car where mark='{mark}' and year={year} and color='{color}';";
+
+                
 
 
                 MySqlCommand cmd = new MySqlCommand(command, conn);

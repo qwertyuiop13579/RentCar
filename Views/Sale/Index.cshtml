@@ -3,8 +3,6 @@
     ViewBag.Title = "Список заказов";
 }
 
-<a  asp-controller="Car" asp-action="Index">Добавить заказ</a>
-
 <table class="table">
     <tr><th>ID Клиента</th><th>ID машины</th><th>Начало аренды</th><th>Конец аренды</th><th>Цена</th><th>Статус</th></tr>
     @foreach (var sale in Model)
@@ -12,12 +10,12 @@
         <tr>
             <td>@sale.id_client</td>
             <td>@sale.id_car</td>
-            <td>@sale.date2.ToShortDateString()</td>
-            <td>@sale.date3.ToShortDateString()</td>
+            <td>@sale.date2.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>@sale.date3.ToString("yyyy-MM-dd HH:mm")</td>
             <td>@sale.price</td>
             <td>@sale.status</td>
             <td>
-                <a class="btn btn-sm btn-danger" asp-controller="Sale"  asp-action="Delete" asp-route-id_sale="@sale.Id">Удалить</a>
+                <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="Delete" asp-route-id_sale="@sale.Id">Удалить</a>
                 <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Confirm" asp-route-id_sale="@sale.Id">Подтвердить</a>
             </td>
         </tr>

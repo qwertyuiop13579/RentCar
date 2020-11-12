@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Migrations;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,38 +18,62 @@ namespace Labs.Controllers
     public class CarController : Controller
     {
         private UserContext _context;
+        private List<string> AllMarks;
         public CarController(UserContext context)
         {
             _context = context;
+            AllMarks = "Acura Alfa Romeo Audi BMW Cadillac Chevrolet Chrysler Citroen Daewoo Dodge Fiat Ford Geely Great Wall Honda Hyundai Infiniti Jaguar Jeep Kia Lada Lancia Land Rover Lexus Mazda Mercedes-Benz Mitsubishi Nissan Opel Peugeot Porsche Renault Rover Saab SEAT Skoda SsangYong Subaru Suzuki Toyota Volkswagen Volvo".Split(" ").ToList();
+            AllMarks.Insert(0, "Все");
         }
 
 
-        public IActionResult Index(string mark, string color, int? year)
+        public IActionResult Index(string mark, int? yearmin, int? yearmax)
         {
-            return View(_context.GetAllCars(mark, color, year));
+            if (AllMarks[0] != "Все") AllMarks.Insert(0, "Все");
+            ViewBag.Marks = new SelectList(AllMarks);
+            
+            if(string.IsNullOrEmpty(mark)) return View(_context.GetAllCars());
+            return View(_context.GetAllCars(mark, yearmin, yearmax));
         }
 
-        public IActionResult IndexBySupplier()
+        public IActionResult IndexBySupplier(string mark, int? yearmin, int? yearmax)
         {
-            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
-            int id_supp = _context.FindSupplierByClient(id_cl).Id;
-            return View(_context.GetAllCars(id_supp));
+            int? id_cl = _context.FindUser(User.Identity.Name).id_client;
+            if (id_cl == null)
+            {
+                return RedirectToAction("Create", "Client");
+            }
+            else
+            {
+                Supplier supp = _context.FindSupplierByClient(id_cl.Value);
+                if (supp == null) return RedirectToAction("Create", "Supplier");
+                else
+                {
+                    int id_supp = supp.Id;
+                    ViewBag.Marks = new SelectList(AllMarks);
+                    return View(_context.GetAllCars(id_supp));
+                }
+            }
         }
 
         [Authorize]
         public IActionResult Create()
         {
-            int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
-            int id_supp = _context.FindSupplierByClient(id_cl).Id;
-            if (id_cl == 0)
+            int? id_cl = _context.FindUser(User.Identity.Name).id_client;
+            
+            if (id_cl == null)
             {
                 return RedirectToAction("Create", "Client");
             }
-            else if (id_supp == 0)
+            else 
             {
-                return RedirectToAction("Create", "Supplier");
+                Supplier supp = _context.FindSupplierByClient(id_cl.Value);
+                if (supp == null) return RedirectToAction("Create", "Supplier");                
+                if (AllMarks[0] == "Все") AllMarks.RemoveAt(0);
+                ViewBag.Marks = new SelectList(AllMarks);
+                return View();
             }
-            return View();
+            
         }
 
         [HttpPost]
@@ -150,45 +174,6 @@ namespace Labs.Controllers
             }
             return NotFound();
         }
-
-        /*
-        [Authorize]
-        public IActionResult Rent(int id)
-        {
-            if (_context.FindUser(User.Identity.Name).id_client != 0)
-            {
-                var model = new RentCarViewModel() { id_car = id };
-                return View(model);
-            }
-            else
-            {
-                return RedirectToAction("Create", "Client");
-            }
-        }
-
-        [HttpPost]
-        public IActionResult Rent(RentCarViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                Payment pay = new Payment() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
-                int idpay = _context.AddPayment(pay);
-
-                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price, status = "Обрабатывается" };
-
-                if (_context.AddSale(sale) != 0)
-                {
-                    _context.CreateEventStatusCar(sale);
-                    return RedirectToAction("Index", "Home");
-                }
-                else ModelState.AddModelError("", "Ошибка");
-
-            }
-            return View(model);
-        }
-        */
-
-
         [Authorize]
         public IActionResult Edit(int id_car)
         {

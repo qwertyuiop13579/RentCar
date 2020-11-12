@@ -3,8 +3,6 @@ using Labs.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +35,7 @@ namespace Labs.Controllers
                 {
                     // добавляем пользователя в бд
                     user = new User { Email = model.Email, Password = UserContext.HashPassword(model.Password) };
-                    if(model.issupplier)
+                    if (model.issupplier)
                     {
                         Role userRole = _context.FindRole("supplier");
                         if (userRole != null)
@@ -53,7 +51,7 @@ namespace Labs.Controllers
                             user.id_role = userRole.Id;
                         }
                     }
-                    
+
                     Status status = _context.FindStatus("notblock");
                     if (status != null)
                     {

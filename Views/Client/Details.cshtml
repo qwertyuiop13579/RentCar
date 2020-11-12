@@ -1,0 +1,34 @@
+﻿@model Labs.Models.ClientDetails
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>Клиент @Model.surname @Model.name[0]. @Model.patronymic[0].  </h4>
+    </div>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+
+            <dt>Фамилия</dt>
+            <dd>@Html.DisplayFor(model => model.surname)</dd>
+
+            <dt>Имя</dt>
+            <dd>@Html.DisplayFor(model => model.name)</dd>
+
+            <dt>отчество</dt>
+            <dd>@Html.DisplayFor(model => model.patronymic)</dd>
+
+            <dt>Страна</dt>
+            <dd>@Html.DisplayFor(model => model.country)</dd>
+
+            <dt>Город</dt>
+            <dd>@Html.DisplayFor(model => model.city)</dd>
+
+            <dt>Телефон</dt>
+            <dd>@Html.DisplayFor(model => model.mobilephone)</dd>
+
+            <dt>Почта</dt>
+            <dd>@Html.DisplayFor(model => model.email)</dd>
+
+        </dl>
+    </div>   
+</div>
+<br />
+<a class="btn btn-sm btn-primary" href='javascript:history.go(-1)'>Назад</a>
