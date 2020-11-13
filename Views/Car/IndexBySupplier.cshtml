@@ -5,18 +5,22 @@
 <!--
 <form method="get">
     <div class="form-inline form-group">
-        <label class="control-label">Марка: </label>
-        <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
-
-        <label class="control-label">Min Год: </label>
-        <input type="number" name="yearmin" class="form-control" />
-
-        <label class="control-label">Max Год: </label>
-        <input type="number" name="yearmax" class="form-control" />
-
-        <input type="submit" value="Поиск" class="btn btn-sm btn-primary" />
-
-        <a asp-controller="Car" asp-action="IndexBySupplier" class="btn btn-primary">Отмена</a>
+        <div style="margin-right:2px">
+            <label class="control-label">Марка: </label>
+            <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
+        </div>
+        <div style="margin-right:2px">
+            <label class="control-label">Min Год: </label>
+            <input type="number" name="yearmin" class="form-control" />
+        </div>
+        <div style="margin-right:2px">
+            <label class="control-label">Max Год: </label>
+            <input type="number" name="yearmax" class="form-control" />
+        </div>
+        <div style="margin-right:2px">
+            <input type="submit" value="Поиск" class="btn btn-sm btn-primary" />
+        </div>
+        <a asp-controller="Car" asp-action="Index" class="btn  btn-sm btn-primary">Отмена</a>
     </div>
 </form>
 -->

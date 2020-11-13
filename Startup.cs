@@ -26,8 +26,9 @@ namespace Labs
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //string connection = Configuration.GetConnectionString("UserConnection");
-            string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
+            
+            string connection = Configuration.GetConnectionString("UserConnection");
+            //string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
             services.Add(new ServiceDescriptor(typeof(UserContext), new UserContext(connection)));
 
 

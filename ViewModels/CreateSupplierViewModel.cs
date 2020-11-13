@@ -13,7 +13,6 @@ namespace Labs.ViewModels
         public string unn { get; set; }
 
 
-
         public string country { get; set; }
         public TypeCity type1 { get; set; }
         public string city { get; set; }

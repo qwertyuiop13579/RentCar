@@ -595,11 +595,11 @@ namespace Labs.Models
                             Id = Convert.ToInt32(reader["Id"]),
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
-                            id_car = Convert.ToInt32(reader["id_car"]),
-                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            id_car = Convert.ToInt32(reader["id_car"]),      
+                            id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["summ"]),
                             status = reader["status"].ToString(),
                         };
                     }
@@ -615,7 +615,7 @@ namespace Labs.Models
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand($"select * from sale where date1='{s.date1.ToString("yyyy-MM-dd HH:mm:ss")}' and id_client={s.id_client} and id_car={s.id_car} and " +
-                    $"id_payment={s.id_payment} and date2='{s.date2.ToString("yyyy-MM-dd HH:mm:ss")}' and date3='{s.date3.ToString("yyyy-MM-dd HH:mm:ss")}' and price={s.price};", conn);
+                    $"id_payment={s.id_payment} and date2='{s.date2.ToString("yyyy-MM-dd HH:mm:ss")}' and date3='{s.date3.ToString("yyyy-MM-dd HH:mm:ss")}' and price={s.summ};", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -627,10 +627,10 @@ namespace Labs.Models
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
                             id_car = Convert.ToInt32(reader["id_car"]),
-                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["price"]),
                             status = reader["status"].ToString(),
                         };
                     }
@@ -655,10 +655,10 @@ namespace Labs.Models
                         {
                             Id = Convert.ToInt32(reader["Id"]),
                             date = Convert.ToDateTime(reader["date"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
-                            account_number = reader["account_number"].ToString(),
-                            payer_number = reader["payer_number"].ToString(),
-                            
+                            amount = (decimal?)reader["amount"],
+                            withdrawAmount= (decimal?)reader["withdrawAmount"],
+                            sender= reader["sender"].ToString(),
+                            operation_Id= reader["operation_id"].ToString(),                           
                         };
                     }
                 }
@@ -820,12 +820,11 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into payment(`date`, `price`, `account_number`, `payer_number`) values('{pay.date.ToString("yyyy-MM-dd")}',{pay.price},'{pay.account_number}','{pay.payer_number}'); ";
+                string command = $"insert into payment(`date`, `amount`, `withdrawAmount`, `sender`, `operation_id`) values('{pay.date.ToString("yyyy-MM-dd HH:mm:ss")}',{pay.amount},{pay.withdrawAmount},'{pay.sender}','{pay.operation_Id}'); ";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
 
                 command = $"select * from payment where id=(select max(id) from payment);";
-
 
                 cmd.CommandText = command;
                 using (var reader = cmd.ExecuteReader())
@@ -848,8 +847,8 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"insert into sale(`date1`,`id_client`,`id_car`,`id_payment`,`date2`,`date3`,`price`,`status`) values(now(),{sale.id_client},{sale.id_car}, {sale.id_payment}, " +
-                    $"'{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}','{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',{sale.price},'{sale.status}'); ";
+                string command = $"insert into sale(`date1`,`id_client`,`id_car`,`date2`,`date3`,`summ`,`status`) values('{sale.date1.ToString("yyyy-MM-dd HH:mm:ss")}',{sale.id_client},{sale.id_car}, " +
+                    $"'{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}','{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',{sale.summ},'{sale.status}'); ";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
 
@@ -1152,7 +1151,7 @@ namespace Labs.Models
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
                 string command = $"update sale set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car},`id_payment`={sale.id_payment}, " +
-                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}',`date3`='{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',`price`={sale.price}, `status`='{sale.status}'  where id={sale.Id};";
+                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}',`date3`='{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',`summ`={sale.summ}, `status`='{sale.status}'  where id={sale.Id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1635,10 +1634,10 @@ namespace Labs.Models
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
                             id_car = Convert.ToInt32(reader["id_car"]),
-                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["price"]),
                             status= reader["status"].ToString(),
                         });
                     }
@@ -1665,10 +1664,10 @@ namespace Labs.Models
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
                             id_car = Convert.ToInt32(reader["id_car"]),
-                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }
@@ -1695,10 +1694,10 @@ namespace Labs.Models
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
                             id_car = Convert.ToInt32(reader["id_car"]),
-                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }
@@ -1727,10 +1726,10 @@ namespace Labs.Models
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
                             id_car = Convert.ToInt32(reader["id_car"]),
-                            id_payment = Convert.ToInt32(reader["id_payment"]),
+                            id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            price = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }

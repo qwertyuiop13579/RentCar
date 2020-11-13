@@ -13,11 +13,11 @@ namespace Labs.Models
         public DateTime date1 { get; set; }
         public int id_client { get; set; }
         public int id_car { get; set; }
-        public int id_payment { get; set; }
         public DateTime date2 { get; set; }
         public DateTime date3 { get; set; }
-        public int price { get; set; }
+        public int summ { get; set; }
         public string status { get; set; }
+        public int? id_payment { get; set; }
 
     }
 }

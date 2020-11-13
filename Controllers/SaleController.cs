@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Labs.Controllers
@@ -33,12 +35,12 @@ namespace Labs.Controllers
             if (id_cl == null) return RedirectToAction("Create", "Client");
 
             Supplier supp = _context.FindSupplierByClient(id_cl.Value);
-            if(supp==null) return RedirectToAction("Create", "Supplier");
-            int id_supp =supp.Id;
+            if (supp == null) return RedirectToAction("Create", "Supplier");
+            int id_supp = supp.Id;
             return View(_context.GetSalesBySupplier(id_supp));
-            
 
-            
+
+
         }
 
         public IActionResult IndexByCar(int id_car)
@@ -63,11 +65,11 @@ namespace Labs.Controllers
 
         public IActionResult Create(int id_c)
         {
-            //if(User.Identity.Name==null) return RedirectToAction("Create", "Client");
             int? id_cl = _context.FindUser(User.Identity.Name).id_client;
+            Car car = _context.FindCar(id_c);
             if (id_cl != null)
             {
-                var model = new CreateSaleViewModel() { id_car = id_c };
+                var model = new CreateSaleViewModel() { id_car = id_c, rentprice = car.Price };
                 return View(model);
             }
             else
@@ -81,10 +83,7 @@ namespace Labs.Controllers
         {
             if (ModelState.IsValid)
             {
-                Payment pay = new Payment() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
-                int idpay = _context.AddPayment(pay);
-
-                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price, status = "Обрабатывается" };
+                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.summ, status = "Обрабатывается" };
 
                 int canadd = _context.CanAddSale(sale);
                 if (canadd == 1)     //проверка на корректность
@@ -94,7 +93,7 @@ namespace Labs.Controllers
                 }
                 else if (canadd == 2)    //проверка на занятость
                 {
-                    ModelState.AddModelError("", "Автомобиль забронирован.");
+                    ModelState.AddModelError("", "В это время автомобиль забронирован.");
                     return View(model);
                 }
 
@@ -147,33 +146,76 @@ namespace Labs.Controllers
         }
 
 
+        public IActionResult Pay(int id_sale)
+        {
+            Sale sale = _context.FindSale(id_sale);
+            if (sale != null)
+            {
+                PayViewModel payModel = new PayViewModel { SaleId = sale.Id, Sum = sale.summ };
+                return View(payModel);
+            }
+            return NotFound();
+        }
+
+
+        [HttpGet]
+        public IActionResult Paid()
+        {
+            //key = DfJ/9D0wTHyVOrL+B0sUQBGF           
+            return View();
+        }
+
+        [HttpPost]
+        public void Paid(string notification_type, string operation_id, string label, string datetime, decimal amount, decimal withdraw_amount, string sender, string sha1_hash, string currency, bool codepro)
+        {
+            string key = "DfJ/9D0wTHyVOrL+B0sUQBGF"; // секретный код
+            string paramString = String.Format("{0}&{1}&{2}&{3}&{4}&{5}&{6}&{7}&{8}", notification_type, operation_id, amount, currency, datetime, sender, codepro.ToString().ToLower(), key, label);
+            string paramStringHash1 = GetHash(paramString);
+            StringComparer comparer = StringComparer.OrdinalIgnoreCase; // создаем класс для сравнения строк
+
+            if (0 == comparer.Compare(paramStringHash1, sha1_hash)) // если хэши идентичны, добавляем данные о заказе в бд
+            {
+                Payment pay = new Payment() { date = Convert.ToDateTime(datetime), operation_Id = operation_id, sender = sender, amount = amount, withdrawAmount = withdraw_amount };
+                int id_pay = _context.AddPayment(pay);
+                Sale sale = _context.FindSale(Convert.ToInt32(label));
+                sale.id_payment = id_pay;
+                sale.status = "Оплачено";
+                _context.UpdateSale(sale);
+            }
+        }
+
+        public string GetHash(string val)
+        {
+            SHA1 sha = new SHA1CryptoServiceProvider();
+            byte[] data = sha.ComputeHash(Encoding.Default.GetBytes(val));
+
+            StringBuilder sBuilder = new StringBuilder();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+            return sBuilder.ToString();
+        }
+
+
 
         public IActionResult Edit(int id_sale)
         {
             Sale sale = _context.FindSale(id_sale);
-            Payment pay = _context.FindPayment(sale.id_payment);
-            if (_context.FindUser(User.Identity.Name).id_client != 0)
+            Car car = _context.FindCar(sale.id_car);
+            var model = new EditSaleViewModel()
             {
-                var model = new EditSaleViewModel()
-                {
-                    Id = sale.Id,
-                    date1 = sale.date1,
-                    id_client = _context.FindUser(User.Identity.Name).id_client.Value,
-                    id_car = sale.id_car,
-                    date2 = sale.date2,
-                    date3 = sale.date3,
-                    price = sale.price,
-                    datepay = pay.date,
-                    account_number = pay.account_number,
-                    payer_number = pay.account_number,
-                    status = sale.status,
-                };
-                return View(model);
-            }
-            else
-            {
-                return RedirectToAction("Create", "Client");
-            }
+                Id = sale.Id,
+                id_client = _context.FindUser(User.Identity.Name).id_client.Value,
+                id_car = sale.id_car,
+                date2 = sale.date2,
+                date3 = sale.date3,
+                rentprice = car.Price,
+                status = sale.status,
+                summ=sale.summ,
+            };
+            return View(model);
         }
 
         [HttpPost]
@@ -181,10 +223,7 @@ namespace Labs.Controllers
         {
             if (ModelState.IsValid)
             {
-                Payment pay = new Payment() { date = model.datepay, price = model.price, account_number = model.account_number, payer_number = model.payer_number };
-                int idpay = _context.AddPayment(pay);
-
-                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = idpay, date2 = model.date2, date3 = model.date3, price = model.price, status = model.status };
+                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.rentprice, status = model.status };
 
                 if (_context.UpdateSale(sale)) return RedirectToAction("Index");
                 else ModelState.AddModelError("", "Ошибка");

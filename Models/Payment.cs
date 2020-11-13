@@ -10,9 +10,11 @@ namespace Labs.Models
     {
         [Key]
         public int Id { get; set; }
-        public DateTime date { get; set; }
-        public int price { get; set; }
-        public string account_number { get; set; }
-        public string payer_number { get; set; }
+        public DateTime date { get; set; }    //дата оплаты
+        public decimal? amount { get; set; } // сумма, которую заплатали с учетом комиссии
+        public decimal? withdrawAmount { get; set; } // сумма, которую заплатали без учета комиссии
+        public string sender { get; set; } // отправитель - кошелек в ЯД
+        public string operation_Id { get; set; } // id операции в ЯД
+
     }
 }

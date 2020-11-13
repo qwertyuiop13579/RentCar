@@ -5,30 +5,23 @@
 <form asp-action="Create" asp-controller="Sale">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" asp-for="id_car" value="@Model.id_car" class="form-control" />
+
+    <div class="form-group">
+        <label class="control-label">Стоимость аренды/час = @Model.rentprice</label>
+        <input type="hidden" asp-for="rentprice" value="@Model.rentprice" class="form-control" id="rentprice" />
+    </div>
+
     <div class="form-group">
         <label asp-for="date2" class="control-label">Начало аренды</label>
-        <input type="datetime-local" asp-for="date2" class="form-control" id="inputdate2"/>
+        <input type="datetime-local" asp-for="date2" class="form-control" id="inputdate2" />
     </div>
     <div class="form-group">
         <label asp-for="date3" class="control-label">Окончание аренды</label>
-        <input type="datetime-local" asp-for="date3" class="form-control" id="inputdate3"/>
+        <input type="datetime-local" asp-for="date3" class="form-control" id="inputdate3" />
     </div>
-    <div class="form-group">
-        <label asp-for="datepay" class="control-label">Дата оплаты</label>
-        <input type="date" asp-for="datepay" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="account_number" class="control-label">Номер счёта</label>
-        <input type="text" asp-for="account_number" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="payer_number" class="control-label">Номер плетельщика</label>
-        <input type="text" asp-for="payer_number" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="price" class="control-label">Цена</label>
-        <input type="number" asp-for="price" class="form-control" />
-    </div>
+    <label class="control-label">Сумма к оплате</label>
+    <input type="number" asp-for="summ" class="form-control" id="price" readonly />
+    <br />
     <div class="form-group">
         <input type="submit" value="Добавить" class="btn btn-outline-secondary" />
     </div>
@@ -36,10 +29,39 @@
 <a asp-controller="Car" asp-action="Index" class="btn btn-primary">Отмена</a>
 @section scripts{
     <script type="text/javascript">
-        const inputdate2 = document.getElementById("inputdate2");
-        inputdate2.value = new Date();
-        const inputdate3 = document.getElementById("inputdate3");
-        inputdate3.value = new Date();
 
+        function diffDates(day_one, day_two) {
+            return (day_one - day_two) / (60 * 60 * 1000);
+        };
+
+        Number.prototype.AddZero = function (b, c) {
+            var l = (String(b || 10).length - String(this).length) + 1;
+            return l > 0 ? new Array(l).join(c || '0') + this : this;
+        };
+        var d = new Date();
+        var localDateTime = [d.getFullYear(), (d.getMonth() + 1).AddZero(), d.getDate().AddZero()].join('-') + 'T' + [d.getHours().AddZero(), d.getMinutes().AddZero()].join(':');
+        var inputdate2 = document.getElementById("inputdate2");
+        inputdate2.value = localDateTime;
+        var inputdate3 = document.getElementById("inputdate3");
+        inputdate3.value = localDateTime;
+
+        var price = document.getElementById("price");
+        var rentprice = document.getElementById("rentprice");
+        inputdate2.addEventListener("change", function (e) {
+            if (new Date(inputdate3.value) < new Date(inputdate2.value)) {
+                alert("Неверная дата аренды.");
+                return;
+            }
+            price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
+        }, false);
+        inputdate3.addEventListener("change", function (e) {
+            if (new Date(inputdate3.value) < new Date(inputdate2.value)) {
+                alert("Неверная дата аренды.");
+                return;
+            }
+            price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
+
+
+        }, false);
     </script>
 }
