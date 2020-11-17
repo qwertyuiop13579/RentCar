@@ -32,7 +32,7 @@ namespace Labs.Controllers
             {
                 return View();
             }
-            else return RedirectToAction("Edit", "Client",   new { id = _context.FindUser(User.Identity.Name).id_client } );
+            else return RedirectToAction("Edit", "Client", new { id = _context.FindUser(User.Identity.Name).id_client });
 
         }
 
@@ -69,10 +69,10 @@ namespace Labs.Controllers
                     index = model.index,
                     housephone = model.housephone,
                     mobilephone = model.mobilephone,
-                    email=model.email,
+                    email = model.email,
 
                 };
-                int id_addr=_context.AddAddress(address);
+                int id_addr = _context.AddAddress(address);
 
 
                 Client client = new Client()
@@ -83,12 +83,12 @@ namespace Labs.Controllers
 
 
                 int id_cl = _context.AddClient(client);
-                if ( id_cl!= 0)
+                if (id_cl != 0)
                 {
                     User user = _context.FindUser(User.Identity.Name);
                     user.id_client = id_cl;
                     _context.UpdateUser(user.Id, user);
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 else ModelState.AddModelError("", "Ошибка");
 
@@ -147,7 +147,7 @@ namespace Labs.Controllers
                 authority = pass.authority,
                 sex = pass.sex,
                 date3 = pass.date3,
-                surname =pass.surname,
+                surname = pass.surname,
                 name = pass.name,
                 patronymic = pass.patronymic,
 
@@ -162,7 +162,7 @@ namespace Labs.Controllers
                 index = addr.index,
                 housephone = addr.housephone,
                 mobilephone = addr.mobilephone,
-                email = addr.mobilephone,
+                email = addr.email,
             };
 
             return View(model);
@@ -200,31 +200,30 @@ namespace Labs.Controllers
                     index = model.index,
                     housephone = model.housephone,
                     mobilephone = model.mobilephone,
-                    email = model.mobilephone,
+                    email = model.email,
                 };
-                _context.AddAddress(address);
+                int id_addr = _context.AddAddress(address);
 
-
+                int id_cl = model.Id;
                 Client client = new Client()
                 {
+                    Id = id_cl,
                     id_passport = idpass,
-                    id_address = _context.FindAddress(address).Id,
+                    id_address = id_addr,
                 };
-                
+
                 if (_context.UpdateClient(client))
                 {
                     User user = _context.FindUser(User.Identity.Name);
-                    user.id_client = _context.GetIdClient(client);
+                    user.id_client = id_cl;
                     _context.UpdateUser(user.Id, user);
                     return RedirectToAction("Index");
                 }
                 else ModelState.AddModelError("", "Ошибка");
-                
+
 
             }
             return View(model);
         }
-
     }
-
 }

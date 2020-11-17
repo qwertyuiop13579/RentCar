@@ -1,54 +1,57 @@
 ﻿@model IEnumerable<Labs.Models.Car>
-@{
-    ViewBag.Title = "Список машин";
-}
-<form method="get">
-    <div class="form-inline form-group">
-        <div style="margin-right:2px">
-            <label class="control-label">Марка: </label>
-            <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
+@{ ViewBag.Title = "Список машин"; }
+
+@* var id = model.Id; //if you want to pass an Id parameter
+    window.location.href = '@Url.Action("Action", "Controller")/' + id; *@
+
+<div class="container">
+    <div class="row">
+        <div class="search-menu h-75 col-md-3">
+            <form method="get">
+                <div class="form-group">
+                    <label class="control-label">Марка</label>
+                    <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Min Год: </label>
+                    <input type="number" name="yearmin" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Max Год: </label>
+                    <input type="number" name="yearmax" class="form-control" />
+                </div>
+                <div class="form-group button-group">
+                    <input id="sss" type="submit" value="Поиск" class="btn btn-sm btn-primary-light" />
+                    <a asp-controller="Car" asp-action="Index" class="btn btn-sm btn-primary-dark">Отмена</a>
+                </div>
+            </form>
         </div>
-        <div style="margin-right:2px">
-            <label class="control-label">Min Год: </label>
-            <input type="number" name="yearmin" class="form-control" />
+
+        <div class="col-md-8">
+            @foreach (var car in Model)
+            {
+<div class="card car" onclick="details(@car.Id)">
+    <div class="card-body row">
+        <div class="col-md-4">
+            <img class="imgcar2" src="@Url.Action("GetImage", "Car", new { id=car.Id })" />
         </div>
-        <div style="margin-right:2px">
-            <label class="control-label">Max Год: </label>
-            <input type="number" name="yearmax" class="form-control" />
+        <div class="col-md-5">
+            <h4 class="card-title">@car.Mark @car.Model</h4>
         </div>
-        <div style="margin-right:2px; padding-top:10px">
-            <input type="submit" value="Поиск" class="btn btn-sm btn-primary" />
-        </div>
-        <div style="margin-right:2px; padding-top:10px">
-            <a asp-controller="Car" asp-action="Index" class="btn  btn-sm btn-primary">Отмена</a>
+        <div class="col-md-3">
+            <p>Цена/час</p>
+            <h1 style="display: inline;">@car.Price</h1>
+            <h4 style="display: inline;">BYN</h4>
         </div>
     </div>
-</form>
-
-@if (Model.Count() == 0)
-{
-    <h2>Нет доступных автомобилей.</h2>
-}
-else
-{
-    <table class="table">
-        <tr><th>Фото</th><th>Марка</th><th>Модель</th><th>Цена/час</th></tr>
-        @foreach (var car in Model)
-        {
-            <tr>
-                <td>
-                    <img class="imgcar2" onclick="@Url.Action("Details", "Car", new { id=car.Id })" src="@Url.Action("GetImage", "Car", new { id=car.Id })" />
-                </td>
-                <td>@car.Mark</td>
-                <td>@car.Model</td>
-                <td>@car.Price</td>
-                <td>
-                    <a class="btn btn-sm btn-primary btndetails" asp-controller="Car" asp-action="Details" asp-route-id="@car.Id">Подробности</a>
-                </td>
-
-            </tr>
-
-        }
-    </table>
-}
-
+</div>            }
+        </div>
+    </div>
+    @section scripts{
+        <script type="text/javascript">
+                function details(id) {
+                    window.location.href='@Url.Action("Details", "Car")/'  +  id;
+                }
+        </script>
+    }
+</div>

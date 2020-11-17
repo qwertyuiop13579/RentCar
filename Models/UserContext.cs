@@ -58,7 +58,7 @@ namespace Labs.Models
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    int? id_cl=null;
+                    int? id_cl = null;
                     string str = reader["id_client"].ToString();
                     if (reader["id_client"].ToString() == "") id_cl = null;
                     else id_cl = Convert.ToInt32(reader["id_client"]);
@@ -70,9 +70,9 @@ namespace Labs.Models
                         dateofregistration = Convert.ToDateTime(reader["dateofregistration"]),
                         id_role = Convert.ToInt32(reader["id_role"]),
                         id_status = Convert.ToInt32(reader["id_status"]),
-                        dateofbeginblock= Convert.ToDateTime(reader["date_beginblock"]),
+                        dateofbeginblock = Convert.ToDateTime(reader["date_beginblock"]),
                         dateofendbock = Convert.ToDateTime(reader["date_endblock"]),
-                        id_client = reader["id_client"].ToString()=="" ?(int?)null: Convert.ToInt32(reader["id_client"]),
+                        id_client = reader["id_client"].ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_client"]),
                     };
                 }
             }
@@ -403,7 +403,7 @@ namespace Labs.Models
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
                             status = reader["status"].ToString(),
-                            country= reader["country"].ToString(),
+                            country = reader["country"].ToString(),
                             city = reader["city"].ToString(),
                             Image = reader["image"].ToString(),
                             ImageMimeType = reader["imagemimetype"].ToString(),
@@ -595,7 +595,7 @@ namespace Labs.Models
                             Id = Convert.ToInt32(reader["Id"]),
                             date1 = Convert.ToDateTime(reader["date1"].ToString()),
                             id_client = Convert.ToInt32(reader["id_client"]),
-                            id_car = Convert.ToInt32(reader["id_car"]),      
+                            id_car = Convert.ToInt32(reader["id_car"]),
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
@@ -656,9 +656,9 @@ namespace Labs.Models
                             Id = Convert.ToInt32(reader["Id"]),
                             date = Convert.ToDateTime(reader["date"].ToString()),
                             amount = (decimal?)reader["amount"],
-                            withdrawAmount= (decimal?)reader["withdrawAmount"],
-                            sender= reader["sender"].ToString(),
-                            operation_Id= reader["operation_id"].ToString(),                           
+                            withdrawAmount = (decimal?)reader["withdrawAmount"],
+                            sender = reader["sender"].ToString(),
+                            operation_Id = reader["operation_id"].ToString(),
                         };
                     }
                 }
@@ -675,7 +675,7 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command;                
+                string command;
                 command = $"INSERT INTO `{NameBD}`.`user`(`Email`, `password`, `dateofregistration`, `id_role`, `id_status`, `date_beginblock`, `date_endblock`, `id_client`) VALUES('{ user.Email }', '{ user.Password }', '{ user.dateofregistration.ToString("yyyy-MM-dd HH:mm:ss") }', '{ user.id_role}', '{user.id_status}', '{ user.dateofbeginblock.ToString("yyyy-MM-dd HH:mm:ss") }', '{user.dateofendbock.ToString("yyyy-MM-dd HH:mm:ss") }', null);";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
@@ -875,13 +875,13 @@ namespace Labs.Models
             }
 
             var sales = GetSalesByCar(sale.id_car);
-            foreach(Sale s in sales)
+            foreach (Sale s in sales)
             {
-                if((sale.date2>s.date2&&sale.date2<s.date3)|| (sale.date3 > s.date2 && sale.date3 < s.date3))
+                if ((sale.date2 > s.date2 && sale.date2 < s.date3) || (sale.date3 > s.date2 && sale.date3 < s.date3))
                 {
                     return 2;
                 }
-                    
+
             }
             return 0;
         }
@@ -1111,7 +1111,7 @@ namespace Labs.Models
         }
 
 
-        public bool UpdateCarStatus(int id,string status)
+        public bool UpdateCarStatus(int id, string status)
         {
             using (MySqlConnection conn = GetConnection())
             {
@@ -1159,7 +1159,7 @@ namespace Labs.Models
             }
         }
 
-        public bool UpdateSaleStatus(int id,string st)
+        public bool UpdateSaleStatus(int id, string st)
         {
             using (MySqlConnection conn = GetConnection())
             {
@@ -1475,8 +1475,8 @@ namespace Labs.Models
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
                             Price = Convert.ToInt32(reader["price"]),
                             status = reader["status"].ToString(),
-                            Image= reader["image"].ToString(),
-                            ImageMimeType=reader["imagemimetype"].ToString(),
+                            Image = reader["image"].ToString(),
+                            ImageMimeType = reader["imagemimetype"].ToString(),
                         });
                     }
                 }
@@ -1493,7 +1493,7 @@ namespace Labs.Models
                 conn.Open();
                 string command = "select * from car ";
                 bool hascr = false;
-                if(mark!="Все")
+                if (mark != "Все")
                 {
                     if (hascr) command += $" and mark='{mark}'";
                     else
@@ -1503,7 +1503,7 @@ namespace Labs.Models
                     }
                 }
                 else { }
-                if (yearmin!=null)
+                if (yearmin != null)
                 {
                     if (hascr) command += $" and year>={yearmin} ";
                     else
@@ -1523,7 +1523,7 @@ namespace Labs.Models
                 }
 
 
-                
+
 
 
                 MySqlCommand cmd = new MySqlCommand(command, conn);
@@ -1561,7 +1561,7 @@ namespace Labs.Models
             {
                 conn.Open();
                 string command = $"select * from car where id_supplier={id_supp};";
-                
+
                 MySqlCommand cmd = new MySqlCommand(command, conn);
 
                 using (var reader = cmd.ExecuteReader())
@@ -1638,7 +1638,7 @@ namespace Labs.Models
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
                             summ = Convert.ToInt32(reader["summ"]),
-                            status= reader["status"].ToString(),
+                            status = reader["status"].ToString(),
                         });
                     }
                 }
@@ -1712,7 +1712,7 @@ namespace Labs.Models
 
             using (MySqlConnection conn = GetConnection())
             {
-                
+
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand($"select * from sale where id_car in (select id from car where id_supplier = {id_supp});", conn);
 

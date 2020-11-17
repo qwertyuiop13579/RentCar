@@ -1,41 +1,31 @@
 ﻿@model Labs.ViewModels.ChangeStatusViewModel
-@{
-    ViewBag.Title = "Сменить статус";
-}
-<h2>Изменение статуса для пользователя @Model.Email</h2>
-@Html.ValidationSummary()
-<form asp-action="ChangeStatus" method="post">
-    <input type="hidden" name="Id" value="@Model.Id" />
 
-    @foreach (Status status in ViewBag.AllStatuses)
-    {
-        @if (status.Name == Model.StatusName)
+<div class="container" style="padding: 15px;">
+    <h2>Изменение статуса для пользователя @Model.Email</h2>
+    @Html.ValidationSummary()
+    <form asp-action="ChangeStatus" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        @foreach (Status status in ViewBag.AllStatuses)
         {
-            <input id="status" checked asp-for="StatusName" name="StatusName" type="radio" value="@status.Name" /><span>@status.Name</span> <br />
-        }
-        else
-        {
-            <input id="status" asp-for="StatusName" name="StatusName" type="radio" value="@status.Name" /><span>@status.Name</span> <br />
-        }
-    }
+@if (status.Name == Model.StatusName)
+{
+<input id="status" checked asp-for="StatusName" name="StatusName" type="radio" value="@status.Name" /><span>@status.Name</span> <br /> }
+else
+{
+<input id="status" asp-for="StatusName" name="StatusName" type="radio" value="@status.Name" /><span>@status.Name</span> <br />}}
 
 
-    <b>Окончание блокировки</b>
+        <b>Окончание блокировки</b>
+        <input id="Dateofendblock" asp-for="Dateofendblock" asp-format="{0:dd/MM/yyyy HH:mm}" name="Dateofendblock" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" type="datetime-local" /><br />
 
+        <label>Навсегда:</label>
+        <input id="IsForever" type="checkbox" asp-for="IsForever" name="IsForever" value="true" />
 
-    <input id="Dateofendblock" asp-for="Dateofendblock" asp-format="{0:dd/MM/yyyy HH:mm}" name="Dateofendblock" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" type="datetime-local" /><br />
+        <button type="submit" class="btn btn-primary">Сохранить</button>
 
-
-
-    <label>Навсегда:</label>
-    <input id="IsForever" type="checkbox" asp-for="IsForever" name="IsForever" value="true" />
-
-
-    <br />
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-
-</form>
-<br />
-<a asp-controller="Users" asp-action="Index" class="btn btn-primary">Отмена</a>
+    </form>
+    <a asp-controller="Users" asp-action="Index" class="btn btn-primary">Отмена</a>
+</div>
 
 

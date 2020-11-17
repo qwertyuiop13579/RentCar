@@ -27,5 +27,9 @@ namespace Labs.ViewModels
         public string housephone { get; set; }
         public string mobilephone { get; set; }
         public string email { get; set; }
+
+
+
+        public int id_client { get; set; }
     }
 }

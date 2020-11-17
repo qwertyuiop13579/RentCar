@@ -27,8 +27,8 @@ namespace Labs
         public void ConfigureServices(IServiceCollection services)
         {
             
-            //string connection = Configuration.GetConnectionString("UserConnection");
-            string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
+            string connection = Configuration.GetConnectionString("UserConnection");
+            //string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
             services.Add(new ServiceDescriptor(typeof(UserContext), new UserContext(connection)));
 
 

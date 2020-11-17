@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Labs.Models;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace Labs.Controllers
 {
@@ -19,11 +12,7 @@ namespace Labs.Controllers
         }
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return View();
-            }
-            else return RedirectToAction("Login","Account");
+            return RedirectToAction("Index", "Car");
         }
         public IActionResult About()
         {

@@ -1,24 +1,20 @@
 ﻿@model Labs.ViewModels.ChangeRoleViewModel
-@{
-    ViewBag.Title = "Сменить роль";
-}
-<h2>Изменение ролей для пользователя @Model.Email</h2>
-@Html.ValidationSummary()
-<form asp-action="ChangeRole" method="post">
-    <input type="hidden" name="Id" value="@Model.Id" />
 
-    @foreach (Role role in ViewBag.AllRoles)
-    {
-        @if (role.Name == Model.RoleName)
+<div class="container" style="padding: 15px;">
+    <h2>Изменение ролей для пользователя @Model.Email</h2>
+    @Html.ValidationSummary()
+    <form asp-action="ChangeRole" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        @foreach (Role role in ViewBag.AllRoles)
         {
-            <input id="role" checked asp-for="RoleName" name="RoleName" type="radio" value="@role.Name" /><span>@role.Name</span> <br />
-        }
-        else
-        {
-            <input id="role" asp-for="RoleName" name="RoleName" type="radio" value="@role.Name" /><span>@role.Name</span> <br />
-        }
-    }
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
-<br />
-<a asp-controller="Users" asp-action="Index" class="btn btn-primary">Отмена</a>
+@if (role.Name == Model.RoleName)
+{
+<input id="role" checked asp-for="RoleName" name="RoleName" type="radio" value="@role.Name" /><span>@role.Name</span> <br /> }
+                else
+                {
+<input id="role" asp-for="RoleName" name="RoleName" type="radio" value="@role.Name" /><span>@role.Name</span> <br />}}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    <a asp-controller="Users" asp-action="Index" class="btn btn-primary-dark">Отмена</a>
+</div>

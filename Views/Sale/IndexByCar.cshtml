@@ -1,25 +1,18 @@
 ﻿@model IEnumerable<Labs.Models.Sale>
-@{
-    ViewBag.Title = "Список заказов автомобиля";
-}
-@if (Model.Count() == 0)
-{
-    <h2>Данный автомобиль ещё не брали в аренду.</h2>
-}
-else
-{
+@{ ViewBag.Title = "Список заказов автомобиля"; }
+
+<div class="container" style="padding-bottom: 15px;">
     <table class="table">
         <tr><th>Клиент</th><th>Начало аренды</th><th>Конец аренды</th><th>Цена</th><th>Статус</th></tr>
         @foreach (var sale in Model)
         {
-            <tr>
-                <td> <a asp-controller="Client" asp-action="Details" asp-route-id="@sale.id_client">@sale.id_client</a></td>
-                <td>@sale.date2.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@sale.date3.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@sale.summ</td>
-                <td>@sale.status</td>
-            </tr>
-        }
+<tr>
+    <td> <a asp-controller="Client" asp-action="Details" asp-route-id="@sale.id_client">@sale.id_client</a></td>
+    <td>@sale.date2.ToString("yyyy-MM-dd HH:mm")</td>
+    <td>@sale.date3.ToString("yyyy-MM-dd HH:mm")</td>
+    <td>@sale.summ</td>
+    <td>@sale.status</td>
+</tr>}
     </table>
-}
-<a href='javascript:history.go(-1)' class="btn btn-primary">Назад</a>
+    <a href='javascript:history.go(-1)' class="btn btn-primary-dark">Назад</a>
+</div>

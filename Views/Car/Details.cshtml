@@ -1,45 +1,57 @@
 ﻿@model Labs.Models.Car
-@{
-    ViewBag.Title = "Об автомобиле";
-}
-<div class="modal-content">
-    <div class="modal-header">
-        <h4>Автомобиль @Model.Mark @Model.Model</h4>
-    </div>
-    <!--    <img alt="car" class="imgcar" style="width: 200px; height: 160px;" src="data:image/jpeg;base64,@(Model.Image)" />         -->
-    <img class="imgcar3" src="@Url.Action("GetImage", "Car", new { Model.Id })" />
-    <div class="modal-body">
-        <dl class="dl-horizontal">
 
-            <dt>Марка</dt>
-            <dd>@Html.DisplayFor(model => model.Mark)</dd>
+<div class="container sm padding-0">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="h3 mb-3 font-weight-normal">Автомобиль @Model.Mark @Model.Model</h1>
+        </div>
+        <!--    <img alt="car" class="imgcar" style="width: 200px; height: 160px;" src="data:image/jpeg;base64,@(Model.Image)" />         -->
+        <div class="card-body row">
+            <div class="col-md-6">
+                <img class="img-fluid" src="@Url.Action("GetImage", "Car", new { Model.Id })" />
+            </div>
+            <div class="col-md-6">
+                <dl>
+                    <div class="row">
+                        <dt class="col-md-4">Марка</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.Mark)</dd>
+                    </div>
 
-            <dt>Название модели:</dt>
-            <dd>@Html.DisplayFor(model => model.Model)</dd>
+                    <div class="row">
+                        <dt class="col-md-4">Модель</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.Model)</dd>
+                    </div>
 
-            <dt>Цвет</dt>
-            <dd>@Html.DisplayFor(model => model.Color)</dd>
+                    <div class="row">
+                        <dt class="col-md-4">Цвет</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.Color)</dd>
+                    </div>
 
-            <dt>Номер</dt>
-            <dd>@Html.DisplayFor(model => model.Goverment_number)</dd>
+                    <div class="row">
+                        <dt class="col-md-4">Номер</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.Goverment_number)</dd>
+                    </div>
 
-            <dt>Год выпуска</dt>
-            <dd>@Html.DisplayFor(model => model.Year)</dd>
+                    <div class="row">
+                        <dt class="col-md-4">Год выпуска</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.Year)</dd>
+                    </div>
 
-            <dt>Страна</dt>
-            <dd>@Html.DisplayFor(model => model.country)</dd>
+                    <div class="row">
+                        <dt class="col-md-4">Страна</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.country)</dd>
+                    </div>
 
-            <dt>Город</dt>
-            <dd>@Html.DisplayFor(model => model.city)</dd>
-        </dl>
+                    <div class="row">
+                        <dt class="col-md-4">Город</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.city)</dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="col-md-6" style="margin-top: 15px;">
+                <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+                <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+            </div>
+        </div>
     </div>
 </div>
-
-@if (User.IsInRole("User"))
-{
-    <br />
-    <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
-    <br />
-}
-<br />
-<a class="btn btn-sm btn-primary" href='javascript:history.go(-1)'>Назад</a>

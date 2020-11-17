@@ -1,0 +1,278 @@
+﻿:root {
+    --color-primary: #3755be;
+    --color-primary-dark: #1b1f3b;
+    --color-secondary: #ff8e88;
+    --text-color-primary: #ffffff;
+    --text-color-secondary: #7d91d4;
+}
+
+body {
+    background: url("../images/background.svg") no-repeat fixed center;
+}
+
+footer {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-color-primary);
+}
+
+.container {
+    border-radius: 5px;
+}
+
+    .container.sm {
+        max-width: 60%;
+    }
+
+        .container.sm > .container {
+            padding: 20px;
+        }
+
+.padding-0 {
+    padding: 0;
+}
+
+.main > :not(.form-login) {
+    background-color: white;
+}
+
+nav.navbar-dark {
+    background-color: var(--color-primary-dark);
+}
+
+    nav.navbar-dark i {
+        color: var(--text-color-secondary);
+    }
+
+.icon-btn {
+    outline: none;
+    border: none;
+    background-color: var(--background-color-main);
+    transition: color 0.3s;
+}
+
+    .icon-btn:focus,
+    .dropdown input[type="submit"]:focus {
+        outline: none;
+    }
+
+.search-menu {
+    background-color: var(--color-secondary);
+    margin: 20px;
+    padding: 15px 10px 5px 10px;
+    border-radius: 5px;
+}
+
+.card p {
+    margin: 0;
+}
+
+.card.car {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    height: 170px;
+}
+
+    .card.car img {
+        max-width: 100%;
+        max-height: 130px;
+    }
+
+#sss {
+    font-weight: bolder;
+}
+
+.btn-primary-light {
+    background-color: white;
+    color: var(--color-primary);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--text-color-primary);
+}
+
+.btn-primary-dark {
+    border: none;
+    outline: none;
+    background-color: var(--color-primary-dark);
+    color: var(--text-color-primary);
+}
+
+    .btn-primary-dark:hover {
+        background-color: #121426;
+        color: var(--text-color-primary);
+    }
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.form-group.button-group input,
+.form-group.button-group a {
+    flex: 1;
+}
+
+.search-menu input,
+.search-menu select {
+    width: 100%;
+}
+
+.form-login {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.form-signin {
+    width: 100%;
+    max-width: 420px;
+    padding: 25px;
+    margin: auto;
+    color: var(--text-color-primary);
+    border-radius: 5px;
+}
+
+    .form-signin button {
+        outline: none;
+        border: none;
+        background-color: var(--color-secondary);
+        transition: 0.3s;
+    }
+
+.form-label-group input.form-control {
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.form-signin button:hover {
+    background-color: #ff6961;
+}
+
+.form-label-group {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+    .form-label-group input,
+    .form-label-group label {
+        height: 3.125rem;
+        padding: .75rem;
+    }
+
+    .form-label-group label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        margin-bottom: 0;
+        line-height: 1.5;
+        color: #495057;
+        pointer-events: none;
+        cursor: text;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        transition: all .3s ease-in-out;
+    }
+
+    .form-label-group input::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-moz-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::-ms-input-placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input::placeholder {
+        color: transparent;
+    }
+
+    .form-label-group input:not(:-moz-placeholder-shown) {
+        padding-top: 1.25rem;
+        padding-bottom: .25rem;
+    }
+
+    .form-label-group input:not(:-ms-input-placeholder) {
+        padding-top: 1.25rem;
+        padding-bottom: .25rem;
+    }
+
+    .form-label-group input:not(:placeholder-shown) {
+        padding-top: 1.25rem;
+        padding-bottom: .25rem;
+    }
+
+    .form-label-group input:not(:-moz-placeholder-shown) ~ label {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+        font-size: 12px;
+        color: #777;
+    }
+
+    .form-label-group input:not(:-ms-input-placeholder) ~ label {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+        font-size: 12px;
+        color: #777;
+    }
+
+    .form-label-group input:not(:placeholder-shown) ~ label {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+        font-size: 12px;
+        color: #777;
+    }
+
+/* Fallback for Edge
+-------------------------------------------------- */
+@supports (-ms-ime-align: auto) {
+    .form-label-group {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-direction: column-reverse;
+        flex-direction: column-reverse;
+    }
+
+        .form-label-group label {
+            position: static;
+        }
+
+        .form-label-group input::-ms-input-placeholder {
+            color: #777;
+        }
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+
+
+
+
+
+

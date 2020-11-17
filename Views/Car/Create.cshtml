@@ -1,72 +1,86 @@
 ﻿@model Labs.ViewModels.CreateCarViewModel
 
-@{
-    ViewBag.Title = "Добавление машины";
-}
-<form asp-action="Create" asp-controller="Car" enctype="multipart/form-data">
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Mark" class="control-label">Марка</label>
-        <select name="mark" asp-items="ViewBag.Marks" class="form-control" asp-for="Mark"></select>
-    </div>
-    <div class="form-group">
-        <label asp-for="Model" class="control-label">Модель</label>
-        <input type="text" asp-for="Model" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Color" class="control-label">Цвет</label>
-        <input type="text" asp-for="Color" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Goverment_number" class="control-label">Гос. Номер</label>
-        <input type="text" asp-for="Goverment_number" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Year" class="control-label">Год</label>
-        <input type="number" asp-for="Year" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Price" class="control-label">Цена/час BYN</label>
-        <input type="number" asp-for="Price" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="country" class="control-label">Страна</label>
-        <input type="text" asp-for="country" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="city" class="control-label">Город</label>
-        <input type="text" asp-for="city" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Image" class="control-label">Фото</label>
-        <input type="file" id="imageinput" asp-for="Image" name="Image" accept="image/*" />
-    </div>
-    <div id="preview">
+@{ ViewBag.Title = "Добавление машины"; }
 
+<div class="container sm">
+    <div class="container">
+        <form asp-action="Create" asp-controller="Car" enctype="multipart/form-data">
+            <div class="text-center mb-4">
+                <h1 class="h3 mb-3 font-weight-normal">Добавление автомобиля</h1>
+            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Mark" class="control-label">Марка</label>
+                    <select name="mark" asp-items="ViewBag.Marks" class="form-control" asp-for="Mark"></select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Model" class="control-label">Модель</label>
+                    <input type="text" asp-for="Model" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Color" class="control-label">Цвет</label>
+                    <input type="text" asp-for="Color" class="form-control" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="Year" class="control-label">Год</label>
+                    <input min="0" type="number" asp-for="Year" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Goverment_number" class="control-label">Гос. Номер</label>
+                <input type="text" asp-for="Goverment_number" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">Цена/час BYN</label>
+                <input min="0" type="number" asp-for="Price" class="form-control" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="country" class="control-label">Страна</label>
+                    <input type="text" asp-for="country" class="form-control" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="city" class="control-label">Город</label>
+                    <input type="text" asp-for="city" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Image" class="control-label">Фото</label>
+                <input class="form-control-file" type="file" id="imageinput" asp-for="Image" name="Image" accept="image/*" />
+            </div>
+
+            <div class="form-group button-group">
+                <input type="submit" value="Добавить" class="btn btn btn-primary" />
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary-dark">Отмена</a>
+            </div>
+        </form>
+
+        @section scripts{
+            <script type="text/javascript">
+                const inputElement = document.getElementById("imageinput");
+                inputElement.addEventListener("change", function (e) {
+                    var file = inputElement.files[0];
+                    var preview = document.getElementById("preview");
+                    preview.innerHTML = "";
+                    var img = document.createElement("img");
+                    img.classList.add("imgcar1");
+                    img.file = file;
+                    preview.appendChild(img);
+                    var reader = new FileReader();
+                    reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
+                    reader.readAsDataURL(file);
+                }, false);
+
+            </script>
+        }
     </div>
-    <br />
-    <div class="form-group">
-        <input type="submit" value="Добавить" class="btn btn-outline-secondary" />
-    </div>
-</form>
-<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Отмена</a>
-
-
-@section scripts{
-    <script type="text/javascript">
-        const inputElement = document.getElementById("imageinput");
-        inputElement.addEventListener("change", function (e) {
-            var file = inputElement.files[0];
-            var preview = document.getElementById("preview");
-            preview.innerHTML = "";
-            var img = document.createElement("img");
-            img.classList.add("imgcar1");
-            img.file = file;
-            preview.appendChild(img);
-            var reader = new FileReader();
-            reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
-            reader.readAsDataURL(file);
-        }, false);
-
-    </script>
-}
+</div>

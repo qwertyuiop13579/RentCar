@@ -1,110 +1,143 @@
 ﻿@model Labs.ViewModels.EditClientViewModel
-@{
-    ViewBag.Title = "Редактирование клиента";
-}
-<form asp-action="Edit" asp-controller="Client">
-    <div asp-validation-summary="All" class="text-danger"></div>
+@{ ViewBag.Title = "Редактирование клиента"; }
 
-    <fieldset title="Passport">
-        <legend>Паспортные данные</legend>
-        <div class="form-group">
-            <label asp-for="passport1" class="control-label">Серия паспорта</label>
-            <input type="text" asp-for="passport1" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="passport2" class="control-label">Номер паспорта</label>
-            <input type="text" asp-for="passport2" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="passport3" class="control-label">Личный номер паспорта</label>
-            <input type="text" asp-for="passport3" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="date1" class="control-label">Дата выдачи паспорта</label>
-            <input type="date" asp-for="date1" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="date2" class="control-label">Срок действия паспорта</label>
-            <input type="date" asp-for="date2" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="authority" class="control-label">Орган, который выдал паспорт</label>
-            <input type="text" asp-for="authority" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="sex" class="control-label">Пол</label>
-            <select asp-for="sex" asp-items="Html.GetEnumSelectList<Sex>()"></select>
-        </div>
-        <div class="form-group">
-            <label asp-for="date3" class="control-label">Дата рождения</label>
-            <input type="date" asp-for="date3" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="surname" class="control-label">Фамилия</label>
-            <input type="text" asp-for="surname" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="name" class="control-label">Имя</label>
-            <input type="text" asp-for="name" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="patronymic" class="control-label">Отчество</label>
-            <input type="text" asp-for="patronymic" class="form-control" />
-        </div>
-    </fieldset>
+<div class="container sm">
+    <div class="container">
+        <form asp-action="Edit" asp-controller="Client">
+            <div class="text-center mb-4">
+                <h1 class="h3 mb-3 font-weight-normal">Редактирование данных клиента</h1>
+            </div>
 
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" value=@Model.Id />
 
+            <fieldset title="Passport">
+                <legend>Паспортные данные</legend>
 
-    <fieldset title="Address">
-        <legend>Адрес</legend>
-        <div class="form-group">
-            <label asp-for="country" class="control-label">Страна</label>
-            <input type="text" asp-for="country" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="type1" class="control-label">Тип населённого пункта</label>
-            <select asp-for="type1" asp-items="Html.GetEnumSelectList<TypeCity>()"></select>
-        </div>
-        <div class="form-group">
-            <label asp-for="city" class="control-label">Город</label>
-            <input type="text" asp-for="city" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="type2" class="control-label">Тип улицы</label>
-            <select asp-for="type2" asp-items="Html.GetEnumSelectList<TypeStreet>()"></select>
-        </div>
-        <div class="form-group">
-            <label asp-for="street" class="control-label">Улица</label>
-            <input type="text" asp-for="street" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label asp-for="numhouse" class="control-label">Дом</label>
-            <input type="number" asp-for="numhouse" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="numapartment" class="control-label">Номер квартиры</label>
-            <input type="number" asp-for="numapartment" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="index" class="control-label">Почтовый индекс</label>
-            <input type="text" asp-for="index" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="housephone" class="control-label">Домашний телефон</label>
-            <input type="text" asp-for="housephone" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="mobilephone" class="control-label">Мобильный телефон</label>
-            <input type="text" asp-for="mobilephone" class="form-control" />
-        </div>
-        <div>
-            <label asp-for="email" class="control-label">Почта</label>
-            <input type="text" asp-for="email" class="form-control" />
-        </div>
-    </fieldset>
-    <br />
-    <div class="form-group">
-        <input type="submit" value="Сохранить" class="btn btn-outline-secondary" />
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="passport1" class="control-label">Серия паспорта</label>
+                        <input type="text" asp-for="passport1" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="passport2" class="control-label">Номер паспорта</label>
+                        <input type="text" asp-for="passport2" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="passport3" class="control-label">Личный номер паспорта</label>
+                    <input type="text" asp-for="passport3" class="form-control" />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="date1" class="control-label">Дата выдачи паспорта</label>
+                        <input type="date" asp-for="date1" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="date2" class="control-label">Срок действия паспорта</label>
+                        <input type="date" asp-for="date2" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="authority" class="control-label">Орган, который выдал паспорт</label>
+                    <input type="text" asp-for="authority" class="form-control" />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="date3" class="control-label">Дата рождения</label>
+                        <input type="date" asp-for="date3" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="sex" class="control-label">Пол</label>
+                        <select asp-for="sex" asp-items="Html.GetEnumSelectList<Sex>()" class="form-control"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="surname" class="control-label">Фамилия</label>
+                    <input type="text" asp-for="surname" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="name" class="control-label">Имя</label>
+                    <input type="text" asp-for="name" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="patronymic" class="control-label">Отчество</label>
+                    <input type="text" asp-for="patronymic" class="form-control" />
+                </div>
+            </fieldset>
+
+            <fieldset title="Address">
+                <legend>Адрес</legend>
+                <div class="form-group">
+                    <label asp-for="country" class="control-label">Страна</label>
+                    <input type="text" asp-for="country" class="form-control" />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="type1" class="control-label">Тип населённого пункта</label>
+                        <select asp-for="type1" asp-items="Html.GetEnumSelectList<TypeCity>()" class="form-control"></select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="city" class="control-label">Населённый пункт</label>
+                        <input type="text" asp-for="city" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="type2" class="control-label">Тип улицы</label>
+                        <select asp-for="type2" asp-items="Html.GetEnumSelectList<TypeStreet>()" class="form-control"></select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="street" class="control-label">Улица</label>
+                        <input type="text" asp-for="street" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label asp-for="numhouse" class="control-label">Дом</label>
+                        <input min="0" type="number" asp-for="numhouse" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="numapartment" class="control-label">Номер квартиры</label>
+                        <input min="0" type="number" asp-for="numapartment" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="index" class="control-label">Почтовый индекс</label>
+                        <input type="text" asp-for="index" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="housephone" class="control-label">Домашний телефон</label>
+                        <input type="text" asp-for="housephone" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="mobilephone" class="control-label">Мобильный телефон</label>
+                        <input type="text" asp-for="mobilephone" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="email" class="control-label">Почта</label>
+                    <input type="text" asp-for="email" class="form-control" />
+                </div>
+            </fieldset>
+
+            <div class="form-group button-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <a href='javascript:history.go(-1)' class="btn btn-primary-dark">Отмена</a>
+            </div>
+        </form>
     </div>
-</form>
-<a href='javascript:history.go(-1)' class="btn btn-primary">Отмена</a>
+</div>

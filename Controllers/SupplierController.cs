@@ -106,6 +106,8 @@ namespace Labs.Controllers
                 housephone = addr.housephone,
                 mobilephone = addr.mobilephone,
                 email = addr.mobilephone,
+
+                id_client=supp.id_client,
             };
 
             return View(model);
@@ -132,9 +134,10 @@ namespace Labs.Controllers
                     email = model.mobilephone,
                 };
                 int id_addr = _context.AddAddress(address);
-                int id_cl = _context.FindUser(User.Identity.Name).id_client.Value;
+                int id_cl = model.id_client;
                 Supplier supp = new Supplier()
                 {
+                    Id=model.Id,
                     firmname = model.firmname,
                     id_address = id_addr,
                     unn = model.unn,

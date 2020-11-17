@@ -68,10 +68,13 @@ namespace Labs.Controllers
             else 
             {
                 Supplier supp = _context.FindSupplierByClient(id_cl.Value);
-                if (supp == null) return RedirectToAction("Create", "Supplier");                
-                if (AllMarks[0] == "Все") AllMarks.RemoveAt(0);
-                ViewBag.Marks = new SelectList(AllMarks);
-                return View();
+                if (supp == null) return RedirectToAction("Create", "Supplier");
+                else
+                {
+                    if (AllMarks[0] == "Все") AllMarks.RemoveAt(0);
+                    ViewBag.Marks = new SelectList(AllMarks);
+                    return View();
+                }
             }
             
         }
@@ -94,7 +97,9 @@ namespace Labs.Controllers
                     Price = modelvm.Price,
                     status = "Свободен",
                     country = modelvm.country,
-                    city = modelvm.city
+                    city = modelvm.city,
+                    Image = null,
+                    ImageMimeType=null,
                 };
 
                 if (modelvm.Image != null)
