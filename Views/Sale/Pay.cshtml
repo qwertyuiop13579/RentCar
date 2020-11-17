@@ -1,10 +1,12 @@
 ﻿@model Labs.ViewModels.PayViewModel
-@{ ViewBag.Title = "Оплата"; }
+@{
+    ViewBag.Title = "Оплата";
+}
 
 <div class="container sm">
     <div class="container">
         <div class="text-center mb-4">
-            <h1 class="h3 mb-3 font-weight-normal">Оплата аренды @Model.SaleId</h1>
+            <h1 class="h3 mb-3 font-weight-normal">Оплата аренды автомобиля @Model.Mark @Model.Model в период c @Model.date2.ToString("dd.MM.yyyy HH:mm") по @Model.date3.ToString("dd.MM.yyyy HH:mm")</h1>
         </div>
         <div>
             <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
@@ -30,7 +32,11 @@
                     </div>
                 </div>
 
-                <input class="btn btn-primary" type="submit" name="submit-button" value="Оплатить">
+                <div class="form-group button-group">
+                    <input class="btn btn-primary" type="submit" name="submit-button" value="Оплатить">
+                    <a href='javascript:history.go(-1)' class="btn btn-primary">Назад</a>
+                </div>
+
                 <input name="successURL" value="https://labs20201111132228.azurewebsites.net/Sale/Paid" type="hidden">
                 <input name="quickpay-back-url" value="https://labs20201111132228.azurewebsites.net/" type="hidden">
             </form>

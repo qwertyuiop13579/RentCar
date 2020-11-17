@@ -1,35 +1,4 @@
 ﻿@model Labs.ViewModels.RegisterViewModel
-@* <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
-        @Html.ValidationSummary()
-        <div class="validation" asp-validation-summary="ModelOnly" />
-        <div>
-            <div>
-                <label asp-for="Email">Введите Email</label><br />
-                <input type="email" asp-for="Email" maxlength="50" />
-                <span asp-validation-for="Email" />
-            </div>
-            <div>
-                <label asp-for="Password">Введите пароль</label><br />
-                <input type="password" asp-for="Password" maxlength="50" />
-                <span asp-validation-for="Password" />
-            </div>
-            <div>
-                <label asp-for="ConfirmPassword">Повторите пароль</label><br />
-                <input type="password" asp-for="ConfirmPassword" maxlength="50" />
-                <span asp-validation-for="ConfirmPassword" />
-            </div>
-            <div>
-                <label asp-for="issupplier">Поставщик</label><br />
-                <input type="checkbox" asp-for="issupplier"/>
-            </div>
-            <br />
-            <div>
-                <input type="submit" value="Регистрация" />
-            </div>
-        </div>
-    </form> *@
-
-
 <div class="form-login">
     <form class="form-signin" asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
         @Html.ValidationSummary()
@@ -51,8 +20,7 @@
         </div>
 
         <div class="form-label-group">
-            <input class="form-control" type="password" asp-for="ConfirmPassword" id="ConfirmPassword" maxlength="50"
-                   placeholder="Подтверждение пароля" />
+            <input class="form-control" type="password" asp-for="ConfirmPassword" id="ConfirmPassword" maxlength="50" placeholder="Подтверждение пароля" />
             <label asp-for="ConfirmPassword" for="ConfirmPassword">Подтверждение пароля</label>
             <span asp-validation-for="ConfirmPassword"></span>
         </div>

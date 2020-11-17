@@ -33,7 +33,7 @@
 <div class="card car" onclick="details(@car.Id)">
     <div class="card-body row">
         <div class="col-md-4">
-            <img class="imgcar2" src="@Url.Action("GetImage", "Car", new { id=car.Id })" />
+            <img src="@Url.Action("GetImage", "Car", new { id=car.Id })" />
         </div>
         <div class="col-md-5">
             <h4 class="card-title">@car.Mark @car.Model</h4>

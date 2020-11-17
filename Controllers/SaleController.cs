@@ -90,7 +90,7 @@ namespace Labs.Controllers
                 int canadd = _context.CanAddSale(sale);
                 if (canadd == 1)     //проверка на корректность
                 {
-                    ModelState.AddModelError("", "Неверное время.");
+                    ModelState.AddModelError("", "Неверное время аренды.");
                     return View(model);
                 }
                 else if (canadd == 2)    //проверка на занятость

@@ -877,11 +877,10 @@ namespace Labs.Models
             var sales = GetSalesByCar(sale.id_car);
             foreach (Sale s in sales)
             {
-                if ((sale.date2 > s.date2 && sale.date2 < s.date3) || (sale.date3 > s.date2 && sale.date3 < s.date3))
+                if ((sale.date2 > s.date2 && sale.date2 < s.date3&&s.status!="Отменён") || (sale.date3 > s.date2 && sale.date3 < s.date3 && s.status != "Отменён"))
                 {
                     return 2;
                 }
-
             }
             return 0;
         }

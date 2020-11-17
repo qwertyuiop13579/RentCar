@@ -59,17 +59,9 @@
                 var price = document.getElementById("price");
                 var rentprice = document.getElementById("rentprice");
                 inputdate2.addEventListener("change", function (e) {
-                    if (new Date(inputdate3.value) < new Date(inputdate2.value)) {
-                        alert("Неверная дата аренды.");
-                        return;
-                    }
                     price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
                 }, false);
                 inputdate3.addEventListener("change", function (e) {
-                    if (new Date(inputdate3.value) < new Date(inputdate2.value)) {
-                        alert("Неверная дата аренды.");
-                        return;
-                    }
                     price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
                 }, false);
             </script>

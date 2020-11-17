@@ -12,12 +12,12 @@
 
             <div class="form-group">
                 <label asp-for="firmname" class="control-label">Название</label>
-                <input type="text" asp-for="firmname" class="form-control" />
+                <input type="text" asp-for="firmname" class="form-control" required/>
             </div>
 
             <div class="form-group">
                 <label asp-for="unn" class="control-label">Учётный номер налогоплательщика</label>
-                <input type="text" asp-for="unn" class="form-control" />
+                <input type="text" asp-for="unn" class="form-control" required/>
             </div>
 
             <fieldset title="Address">
@@ -25,7 +25,7 @@
 
                 <div class="form-group">
                     <label asp-for="country" class="control-label">Страна</label>
-                    <input type="text" asp-for="country" class="form-control" />
+                    <input type="text" asp-for="country" class="form-control" required/>
                 </div>
 
                 <div class="form-row">
@@ -35,7 +35,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label asp-for="city" class="control-label">Населённый пункт</label>
-                        <input type="text" asp-for="city" class="form-control" />
+                        <input type="text" asp-for="city" class="form-control" required/>
                     </div>
                 </div>
 
@@ -46,18 +46,18 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label asp-for="street" class="control-label">Улица</label>
-                        <input type="text" asp-for="street" class="form-control" />
+                        <input type="text" asp-for="street" class="form-control" required/>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label asp-for="numhouse" class="control-label">Дом</label>
-                        <input min="0" type="number" asp-for="numhouse" class="form-control" />
+                        <input min="0" type="number" asp-for="numhouse" class="form-control" required/>
                     </div>
                     <div class="form-group col-md-4">
                         <label asp-for="numapartment" class="control-label">Номер квартиры</label>
-                        <input min="0" type="number" asp-for="numapartment" class="form-control" />
+                        <input min="0" type="number" asp-for="numapartment" class="form-control" required/>
                     </div>
                     <div class="form-group col-md-4">
                         <label asp-for="index" class="control-label">Почтовый индекс</label>
@@ -72,13 +72,13 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label asp-for="mobilephone" class="control-label">Мобильный телефон</label>
-                        <input type="text" asp-for="mobilephone" class="form-control" />
+                        <input type="text" asp-for="mobilephone" class="form-control" required/>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="email" class="control-label">Почта</label>
-                    <input type="email" asp-for="email" class="form-control" />
+                    <input type="email" asp-for="email" class="form-control" required/>
                 </div>
             </fieldset>
 

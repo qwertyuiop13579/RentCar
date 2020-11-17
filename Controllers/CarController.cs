@@ -99,7 +99,7 @@ namespace Labs.Controllers
                     country = modelvm.country,
                     city = modelvm.city,
                     Image = null,
-                    ImageMimeType=null,
+                    ImageMimeType = null,
                 };
 
                 if (modelvm.Image != null)
@@ -115,7 +115,14 @@ namespace Labs.Controllers
                 }
                 if (_context.AddCar(car)) return RedirectToAction("Index", "Home");
                 else ModelState.AddModelError("", "Ошибка");
+
             }
+            else
+            {
+                ModelState.AddModelError("", "Ошибка");
+            }
+            if (AllMarks[0] == "Все") AllMarks.RemoveAt(0);
+            ViewBag.Marks = new SelectList(AllMarks);
             return View(modelvm);
         }
 
@@ -204,7 +211,8 @@ namespace Labs.Controllers
                 city = car.city,
                 Image = file,
             };
-
+            if (AllMarks[0] == "Все") AllMarks.RemoveAt(0);
+            ViewBag.Marks = new SelectList(AllMarks);
             return View(model);
         }
 
@@ -247,6 +255,8 @@ namespace Labs.Controllers
                     else ModelState.AddModelError("", "Ошибка");
                 }
             }
+            if (AllMarks[0] == "Все") AllMarks.RemoveAt(0);
+            ViewBag.Marks = new SelectList(AllMarks);
             return View(modelvm);
         }
 

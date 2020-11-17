@@ -2,10 +2,15 @@
 @{ ViewBag.Title = "Список заказов клиента"; }
 
 <div class="container" style="padding-bottom: 15px;">
-    <table class="table">
-        <tr><th>Автомобиль</th><th>Начало аренды</th><th>Конец аренды</th><th>Цена</th><th>Статус</th></tr>
-        @foreach (var sale in Model)
-        {
+    @if (Model.Count() == 0)
+    {
+<h1 class="h3 mb-3 font-weight-normal">Данный клиент не брал аавтомобили в аренду.</h1> }
+else
+{
+<table class="table">
+    <tr><th>Автомобиль</th><th>Начало аренды</th><th>Конец аренды</th><th>Цена</th><th>Статус</th></tr>
+    @foreach (var sale in Model)
+    {
 <tr>
     <td> <a asp-controller="Car" asp-action="Details" asp-route-id="@sale.id_car">@sale.id_car</a></td>
     <td>@sale.date2.ToString("yyyy-MM-dd HH:mm")</td>
@@ -13,13 +18,16 @@
     <td>@sale.summ</td>
     <td>@sale.status</td>
     <td>
-        @if (sale.status != "Оплачен")
+        @if (sale.status =="Обрабатывается")
         {
-<a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Edit" asp-route-id_sale="@sale.Id">Изменить</a>}
+        <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Edit" asp-route-id_sale="@sale.Id">Изменить</a>
+        }
         <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Pay" asp-route-id_sale="@sale.Id">Оплатить</a>
         <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="Cancel" asp-route-id_sale="@sale.Id">Отменить</a>
     </td>
 </tr>}
-    </table>
-    <a href='javascript:history.go(-1)' class="btn btn-primary-dark">Назад</a>
+</table>}
+    <div class="col-md-6" style="margin-top: 15px;">
+        <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+    </div>
 </div>

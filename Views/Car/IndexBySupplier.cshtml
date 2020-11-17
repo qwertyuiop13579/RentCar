@@ -1,29 +1,11 @@
 ﻿@model IEnumerable<Labs.Models.Car>
 @{ ViewBag.Title = "Список моих машин"; }
-<!--
-<form method="get">
-    <div class="form-inline form-group">
-        <div style="margin-right:2px">
-            <label class="control-label">Марка: </label>
-            <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
-        </div>
-        <div style="margin-right:2px">
-            <label class="control-label">Min Год: </label>
-            <input type="number" name="yearmin" class="form-control" />
-        </div>
-        <div style="margin-right:2px">
-            <label class="control-label">Max Год: </label>
-            <input type="number" name="yearmax" class="form-control" />
-        </div>
-        <div style="margin-right:2px">
-            <input type="submit" value="Поиск" class="btn btn-sm btn-primary" />
-        </div>
-        <a asp-controller="Car" asp-action="Index" class="btn  btn-sm btn-primary">Отмена</a>
-    </div>
-</form>
--->
-
-<div class="container">
+<div class="container" style="padding-bottom: 15px;">
+    @if (Model.Count() == 0)
+    {
+        <h1 class="h3 mb-3 font-weight-normal">Данный поставщик ещё не сдал автомобиль в аренду.</h1>
+    }
+    else { 
     <table class="table">
         <tr><th>Фото</th><th>Марка</th><th>Модель</th><th>Цена/час</th><th>Статус</th></tr>
         @foreach (var car in Model)
@@ -41,6 +23,11 @@
         <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="IndexByCar" asp-route-id_car="@car.Id">История</a>
         <a class="btn btn-sm btn-danger" asp-controller="Car" asp-action="Delete" asp-route-id="@car.Id">Удалить</a>
     </td>
-</tr>}
+</tr>
+}
     </table>
+    }
+    <div class="col-md-6" style="margin-top: 15px;">
+        <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+    </div>
 </div>
