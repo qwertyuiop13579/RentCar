@@ -64,10 +64,11 @@ namespace Labs.Controllers
                     user.dateofendbock = new DateTime();
                     _context.AddNewUser(user);
 
-                    await Authenticate(user); // аутентификация
+                    //await Authenticate(user); // аутентификация
 
                     return RedirectToAction("Login");
                 }
+                else ModelState.AddModelError("", "Пользователь с такой почтой уже существует.");
             }
             else ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             return View(model);

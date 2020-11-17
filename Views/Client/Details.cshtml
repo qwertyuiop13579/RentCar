@@ -1,4 +1,7 @@
 ﻿@model Labs.Models.ClientDetails
+@{
+    ViewBag.Title = "О клиенте";
+}
 <div class="modal-content">
     <div class="modal-header">
         <h4>Клиент @Model.surname @Model.name[0]. @Model.patronymic[0].  </h4>
@@ -28,7 +31,7 @@
             <dd>@Html.DisplayFor(model => model.email)</dd>
 
         </dl>
-    </div>   
+    </div>
 </div>
 <br />
 <a class="btn btn-sm btn-primary" href='javascript:history.go(-1)'>Назад</a>

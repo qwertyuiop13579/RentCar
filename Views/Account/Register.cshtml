@@ -1,5 +1,8 @@
 ﻿@model Labs.ViewModels.RegisterViewModel
 
+@{
+    ViewBag.Title = "Регистрация";
+}
 <h2>Регистрация</h2>
 
 <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
@@ -23,7 +26,7 @@
         </div>
         <div>
             <label asp-for="issupplier">Поставщик</label><br />
-            <input type="checkbox" asp-for="issupplier"/>
+            <input type="checkbox" asp-for="issupplier" />
         </div>
         <br />
         <div>

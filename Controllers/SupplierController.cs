@@ -1,5 +1,6 @@
 ﻿using Labs.Models;
 using Labs.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Labs.Controllers
 {
+    [Authorize]
     public class SupplierController : Controller
     {
         private UserContext _context;
@@ -17,7 +19,7 @@ namespace Labs.Controllers
             _context = context;
         }
 
-
+        [Authorize(Roles = "admin")]
         public IActionResult Index()
         {
             return View(_context.GetAllSuppliers());

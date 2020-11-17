@@ -1,5 +1,6 @@
 ﻿using Labs.Models;
 using Labs.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Labs.Controllers
 {
+    [Authorize]
     public class ClientController : Controller
     {
         private UserContext _context;
@@ -17,7 +19,7 @@ namespace Labs.Controllers
             _context = context;
         }
 
-
+        [Authorize(Roles = "admin")]
         public IActionResult Index()
         {
             return View(_context.GetAllClients());
@@ -67,7 +69,7 @@ namespace Labs.Controllers
                     index = model.index,
                     housephone = model.housephone,
                     mobilephone = model.mobilephone,
-                    email=model.mobilephone,
+                    email=model.email,
 
                 };
                 int id_addr=_context.AddAddress(address);

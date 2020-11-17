@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Оплата";
 }
-<h2>Оплата аренды @Model.SaleId</h2>
+<h2>Оплата аренды автомобиля @Model.Mark @Model.Model в период c @Model.date2.ToString("dd.MM.yyyy HH:mm") по @Model.date3.ToString("dd.MM.yyyy HH:mm").</h2>
 <div>
     <form method="POST" action="https://money.yandex.ru/quickpay/confirm.xml">
         <input name="label" value="@Model.SaleId" type="hidden">
@@ -19,3 +19,5 @@
         <input name="quickpay-back-url" value="https://labs20201111132228.azurewebsites.net/" type="hidden">
     </form>
 </div>
+<br />
+<a href='javascript:history.go(-1)' class="btn btn-primary">Назад</a>

@@ -1,5 +1,7 @@
 ﻿@model Labs.ViewModels.ChangeStatusViewModel
-
+@{
+    ViewBag.Title = "Сменить статус";
+}
 <h2>Изменение статуса для пользователя @Model.Email</h2>
 @Html.ValidationSummary()
 <form asp-action="ChangeStatus" method="post">
@@ -22,7 +24,7 @@
 
 
     <input id="Dateofendblock" asp-for="Dateofendblock" asp-format="{0:dd/MM/yyyy HH:mm}" name="Dateofendblock" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" type="datetime-local" /><br />
-    
+
 
 
     <label>Навсегда:</label>

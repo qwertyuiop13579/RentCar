@@ -21,13 +21,13 @@ namespace Labs.Controllers
             _context = context;
         }
 
-
+        [Authorize(Roles = "manager,admin")]
         public IActionResult Index()
         {
             return View(_context.GetAllSales());
         }
 
-
+        [Authorize(Roles = "supplier,admin")]
         public IActionResult IndexBySupplier()
         {
             int? id_cl = _context.FindUser(User.Identity.Name).id_client;
@@ -43,11 +43,13 @@ namespace Labs.Controllers
 
         }
 
+        [Authorize(Roles = "supplier,admin")]
         public IActionResult IndexByCar(int id_car)
         {
             return View(_context.GetSalesByCar(id_car));
         }
 
+        
         public IActionResult IndexByClient()
         {
             int? id_cl = _context.FindUser(User.Identity.Name).id_client;
@@ -149,9 +151,10 @@ namespace Labs.Controllers
         public IActionResult Pay(int id_sale)
         {
             Sale sale = _context.FindSale(id_sale);
+            Car car = _context.FindCar(sale.id_car);
             if (sale != null)
             {
-                PayViewModel payModel = new PayViewModel { SaleId = sale.Id, Sum = sale.summ };
+                PayViewModel payModel = new PayViewModel { SaleId = sale.Id, Sum = sale.summ,Model=car.Model,Mark=car.Mark,date2=sale.date2,date3=sale.date3 };
                 return View(payModel);
             }
             return NotFound();

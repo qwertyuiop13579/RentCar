@@ -1,5 +1,7 @@
 ﻿@model Labs.ViewModels.ChangeRoleViewModel
-
+@{
+    ViewBag.Title = "Сменить роль";
+}
 <h2>Изменение ролей для пользователя @Model.Email</h2>
 @Html.ValidationSummary()
 <form asp-action="ChangeRole" method="post">

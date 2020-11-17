@@ -11,5 +11,9 @@ namespace Labs.ViewModels
     {
         public int SaleId { get; set; }
         public decimal Sum { get; set; }
+        public string Model { get; set; }
+        public string Mark { get; set; }
+        public DateTime date2 { get; set; }
+        public DateTime date3 { get; set; }
     }
 }

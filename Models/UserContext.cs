@@ -1637,7 +1637,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToInt32(reader["summ"]),
                             status= reader["status"].ToString(),
                         });
                     }

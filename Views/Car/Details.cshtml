@@ -1,4 +1,7 @@
 ﻿@model Labs.Models.Car
+@{
+    ViewBag.Title = "Об автомобиле";
+}
 <div class="modal-content">
     <div class="modal-header">
         <h4>Автомобиль @Model.Mark @Model.Model</h4>
@@ -29,10 +32,14 @@
             <dt>Город</dt>
             <dd>@Html.DisplayFor(model => model.city)</dd>
         </dl>
-    </div>   
+    </div>
 </div>
-<br />
-<a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
-<br />
+
+@if (User.IsInRole("User"))
+{
+    <br />
+    <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+    <br />
+}
 <br />
 <a class="btn btn-sm btn-primary" href='javascript:history.go(-1)'>Назад</a>
