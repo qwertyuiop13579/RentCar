@@ -13,7 +13,7 @@
 
             <div class="form-group">
                 <label class="control-label">Стоимость аренды/час = @Model.rentprice</label>
-                <input type="hidden" asp-for="rentprice" value="@Model.rentprice" class="form-control" id="rentprice" />
+                <input type="hidden" value="@Model.rentprice" class="form-control" id="rentprice" />
             </div>
 
             <div class="form-row">
@@ -29,7 +29,7 @@
 
             <div class="form-group">
                 <label class="control-label">Сумма к оплате</label>
-                <input type="number" asp-for="summ" class="form-control" id="summ" readonly />
+                <input type="number" asp-for="summ" class="form-control" id="summ" readonly step="0.01" />
             </div>
 
             <div class="form-group button-group">
@@ -44,7 +44,7 @@
                 function diffDates(day_one, day_two) {
                     return (day_one - day_two) / (60 * 60 * 1000);
                 };
-
+                
                 Number.prototype.AddZero = function (b, c) {
                     var l = (String(b || 10).length - String(this).length) + 1;
                     return l > 0 ? new Array(l).join(c || '0') + this : this;
@@ -59,23 +59,26 @@
                 var summ = document.getElementById("summ");
                 var rentprice = document.getElementById("rentprice");
                 var addbtn = document.getElementById("addbtn");
-                inputdate2.addEventListener("change", function (e) {
+                inputdate2.addEventListener("change", function (e)
+                {
                     if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
                         summ.value = -1;
                         addbtn.disabled = true;
-
                     }
-                    else {
+                    else
+                    {
                         summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
                         addbtn.disabled = false;
                     }
                 }, false);
                 inputdate3.addEventListener("change", function (e) {
-                    if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
+                    if (new Date(inputdate2.value) > new Date(inputdate3.value))
+                    {
                         summ.value = -1;
                         addbtn.disabled = true;
                     }
-                    else {
+                    else
+                    {
                         summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
                         addbtn.disabled = false;
                     }

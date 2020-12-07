@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Labs.Models;
@@ -81,6 +82,10 @@ namespace Labs
                 context.Response.Headers.Add("X-Xss-Protection", "1");  //Enables XSS protection. If XSS is detected, the browser attempts to filter or sanitize the output, but still renders it for the most part.
                 await next();
             });
+
+
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
 
             /*
             app.Use(async (context, next) =>

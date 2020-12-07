@@ -12,8 +12,8 @@ namespace Labs.ViewModels
         public int id_car { get; set; }
         public DateTime date2 { get; set; }
         public DateTime date3 { get; set; }
-        public int rentprice { get; set; }
+        public double rentprice { get; set; }
         public string status { get; set; }
-        public int summ { get; set; }
+        public double summ { get; set; }
     }
 }

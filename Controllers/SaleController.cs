@@ -68,9 +68,10 @@ namespace Labs.Controllers
         public IActionResult Create(int id_c)
         {
             int? id_cl = _context.FindUser(User.Identity.Name).id_client;
-            Car car = _context.FindCar(id_c);
+            
             if (id_cl != null)
             {
+                Car car = _context.FindCar(id_c);
                 var model = new CreateSaleViewModel() { id_car = id_c, rentprice = car.Price };
                 return View(model);
             }
@@ -85,7 +86,7 @@ namespace Labs.Controllers
         {
             if (ModelState.IsValid)
             {
-                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.summ, status = "Обрабатывается" };
+                Sale sale = new Sale() {date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.summ, status = "Обрабатывается" };
 
                 int canadd = _context.CanAddSale(sale);
                 if (canadd == 1)     //проверка на корректность
@@ -191,7 +192,7 @@ namespace Labs.Controllers
             Car car = _context.FindCar(sale.id_car);
             if (sale != null)
             {
-                PayViewModel payModel = new PayViewModel { SaleId = sale.Id, Sum = sale.summ,Model=car.Model,Mark=car.Mark,date2=sale.date2,date3=sale.date3 };
+                PayViewModel payModel = new PayViewModel { SaleId = sale.Id, Sum = (decimal)sale.summ,Model=car.Model,Mark=car.Mark,date2=sale.date2,date3=sale.date3 };
                 return View(payModel);
             }
             return NotFound();
@@ -263,7 +264,7 @@ namespace Labs.Controllers
         {
             if (ModelState.IsValid)
             {
-                Sale sale = new Sale() { Id=model.Id,date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.rentprice, status = model.status };
+                Sale sale = new Sale() { Id=model.Id,date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.summ, status = model.status };
 
                 int canadd = _context.CanAddSale(sale);
                 if (canadd == 1)     //проверка на корректность

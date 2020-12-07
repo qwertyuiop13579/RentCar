@@ -15,7 +15,7 @@ namespace Labs.ViewModels
         public string Goverment_number { get; set; }
         public int Year { get; set; }
         public int id_supplier { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
         public string status { get; set; }
         public string country { get; set; }
         public string city { get; set; }

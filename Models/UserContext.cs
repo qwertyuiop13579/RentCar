@@ -316,7 +316,7 @@ namespace Labs.Models
                     {
                         supp = new Supplier()
                         {
-                            Id = Convert.ToInt32(reader["Id"]),
+                            Id = Convert.ToInt32(reader["id"]),
                             firmname = reader["firmname"].ToString(),
                             id_address = Convert.ToInt32(reader["id_legaladdress"]),
                             unn = reader["unn"].ToString(),
@@ -335,7 +335,7 @@ namespace Labs.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"select * from supplier where id = {id}", conn);
+                MySqlCommand cmd = new MySqlCommand($"select * from supplier where id = {id};", conn);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -343,7 +343,7 @@ namespace Labs.Models
                     {
                         supp = new Supplier()
                         {
-                            Id = Convert.ToInt32(reader["Id"]),
+                            Id = Convert.ToInt32(reader["id"]),
                             firmname = reader["firmname"].ToString(),
                             id_address = Convert.ToInt32(reader["id_legaladdress"]),
                             unn = reader["unn"].ToString(),
@@ -397,7 +397,7 @@ namespace Labs.Models
                             Goverment_number = reader["model"].ToString(),
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
-                            Price = Convert.ToInt32(reader["price"]),
+                            Price = Convert.ToDouble(reader["price"]),
                             status = reader["status"].ToString(),
                             country = reader["country"].ToString(),
                             city = reader["city"].ToString(),
@@ -433,7 +433,7 @@ namespace Labs.Models
                             Goverment_number = reader["model"].ToString(),
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
-                            Price = Convert.ToInt32(reader["price"]),
+                            Price = Convert.ToDouble(reader["price"]),
                             status = reader["status"].ToString(),
                             country = reader["country"].ToString(),
                             city = reader["city"].ToString(),
@@ -595,7 +595,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["summ"]),
+                            summ = Convert.ToDouble(reader["summ"]),
                             status = reader["status"].ToString(),
                         };
                     }
@@ -626,7 +626,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["price"]),
+                            summ = Convert.ToDouble(reader["price"]),
                             status = reader["status"].ToString(),
                         };
                     }
@@ -1128,8 +1128,8 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"update sale set `id_client`={supp.id_client},`firmname`='{supp.firmname}',`id_legaladdress`={supp.id_address}, " +
-                    $"`unn`='{supp.unn}' where id={supp.Id};";
+                string command = $"update supplier set `id_client`={supp.id_client},`firmname`='{supp.firmname}',`id_legaladdress`={supp.id_address}, " +
+                    $"`unn`='{supp.unn}' where `id`={supp.Id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
                 if (res == 1) return true;
@@ -1452,7 +1452,7 @@ namespace Labs.Models
                     {
                         list.Add(new Supplier()
                         {
-                            Id = Convert.ToInt32(reader["Id"]),
+                            Id = Convert.ToInt32(reader["id"]),
                             firmname = reader["firmname"].ToString(),
                             id_address = Convert.ToInt32(reader["id_legaladdress"]),
                             unn = reader["unn"].ToString(),
@@ -1485,7 +1485,7 @@ namespace Labs.Models
                             Goverment_number = reader["model"].ToString(),
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
-                            Price = Convert.ToInt32(reader["price"]),
+                            Price = Convert.ToDouble(reader["price"]),
                             status = reader["status"].ToString(),
                             Image = reader["image"].ToString(),
                             ImageMimeType = reader["imagemimetype"].ToString(),
@@ -1553,7 +1553,7 @@ namespace Labs.Models
                             Goverment_number = reader["model"].ToString(),
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
-                            Price = Convert.ToInt32(reader["price"]),
+                            Price = Convert.ToDouble(reader["price"]),
                             status = reader["status"].ToString(),
                             Image = reader["image"].ToString(),
                             ImageMimeType = reader["imagemimetype"].ToString(),
@@ -1589,7 +1589,7 @@ namespace Labs.Models
                             Goverment_number = reader["model"].ToString(),
                             Year = Convert.ToInt32(reader["year"]),
                             id_supplier = Convert.ToInt32(reader["id_supplier"]),
-                            Price = Convert.ToInt32(reader["price"]),
+                            Price = Convert.ToDouble(reader["price"]),
                             status = reader["status"].ToString(),
                             Image = reader["image"].ToString(),
                             ImageMimeType = reader["imagemimetype"].ToString(),
@@ -1649,7 +1649,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["summ"]),
+                            summ = Convert.ToDouble(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }
@@ -1679,7 +1679,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["summ"]),
+                            summ = Convert.ToDouble(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }
@@ -1709,7 +1709,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["summ"]),
+                            summ = Convert.ToDouble(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }
@@ -1741,7 +1741,7 @@ namespace Labs.Models
                             id_payment = (reader["id_payment"]).ToString() == "" ? (int?)null : Convert.ToInt32(reader["id_payment"]),
                             date2 = Convert.ToDateTime(reader["date2"].ToString()),
                             date3 = Convert.ToDateTime(reader["date3"].ToString()),
-                            summ = Convert.ToInt32(reader["summ"]),
+                            summ = Convert.ToDouble(reader["summ"]),
                             status = reader["status"].ToString(),
                         });
                     }

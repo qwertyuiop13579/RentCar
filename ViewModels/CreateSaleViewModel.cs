@@ -17,6 +17,6 @@ namespace Labs.ViewModels
         public DateTime date2 { get; set; }
         [Required]
         public DateTime date3 { get; set; }
-        public int summ { get; set; }
+        public double summ { get; set; }
     }
 }

@@ -61,7 +61,7 @@ namespace Labs.Controllers
                     index = model.index,
                     housephone = model.housephone,
                     mobilephone = model.mobilephone,
-                    email = model.mobilephone,
+                    email = model.email,
                 };
                 int id_addr = _context.AddAddress(address);
 
@@ -105,7 +105,7 @@ namespace Labs.Controllers
                 index = addr.index,
                 housephone = addr.housephone,
                 mobilephone = addr.mobilephone,
-                email = addr.mobilephone,
+                email = addr.email,
 
                 id_client=supp.id_client,
             };
@@ -131,7 +131,7 @@ namespace Labs.Controllers
                     index = model.index,
                     housephone = model.housephone,
                     mobilephone = model.mobilephone,
-                    email = model.mobilephone,
+                    email = model.email,
                 };
                 int id_addr = _context.AddAddress(address);
                 int id_cl = model.id_client;
@@ -139,9 +139,9 @@ namespace Labs.Controllers
                 {
                     Id=model.Id,
                     firmname = model.firmname,
-                    id_address = id_addr,
+                    id_address = id_addr,             
                     unn = model.unn,
-                    id_client = id_cl
+                    id_client = id_cl,
                 };
 
                 if (_context.UpdateSupplier(supp))
