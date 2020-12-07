@@ -16,9 +16,12 @@ namespace Labs
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IWebHostEnvironment _env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -27,14 +30,15 @@ namespace Labs
         public void ConfigureServices(IServiceCollection services)
         {
             
-            //string connection = Configuration.GetConnectionString("UserConnection");
-            string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
+            string connection = Configuration.GetConnectionString("UserConnection");
+            //string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
             services.Add(new ServiceDescriptor(typeof(UserContext), new UserContext(connection)));
 
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
+                    
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                     options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
 

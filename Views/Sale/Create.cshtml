@@ -29,11 +29,11 @@
 
             <div class="form-group">
                 <label class="control-label">Сумма к оплате</label>
-                <input type="number" asp-for="summ" class="form-control" id="price" readonly />
+                <input type="number" asp-for="summ" class="form-control" id="summ" readonly />
             </div>
 
             <div class="form-group button-group">
-                <input type="submit" value="Добавить" class="btn btn-primary" />
+                <input type="submit" value="Добавить" class="btn btn-primary" id="addbtn"/>
                 <a asp-controller="Car" asp-action="Index" class="btn btn-primary-dark">Отмена</a>
             </div>
         </form>
@@ -56,13 +56,29 @@
                 var inputdate3 = document.getElementById("inputdate3");
                 inputdate3.value = localDateTime;
 
-                var price = document.getElementById("price");
+                var summ = document.getElementById("summ");
                 var rentprice = document.getElementById("rentprice");
+                var addbtn = document.getElementById("addbtn");
                 inputdate2.addEventListener("change", function (e) {
-                    price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
+                    if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
+                        summ.value = -1;
+                        addbtn.disabled = true;
+
+                    }
+                    else {
+                        summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
+                        addbtn.disabled = false;
+                    }
                 }, false);
                 inputdate3.addEventListener("change", function (e) {
-                    price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
+                    if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
+                        summ.value = -1;
+                        addbtn.disabled = true;
+                    }
+                    else {
+                        summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
+                        addbtn.disabled = false;
+                    }
                 }, false);
             </script>
         }

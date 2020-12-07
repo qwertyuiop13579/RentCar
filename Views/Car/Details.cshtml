@@ -48,9 +48,19 @@
                 </dl>
             </div>
             <div class="col-md-6" style="margin-top: 15px;">
-
-                <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
-                <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if(User.IsInRole("user"))
+                    {
+                        <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+                    }
+                    <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+                }
+                else
+                {
+                    <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+                    <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+                }
             </div>
         </div>
     </div>

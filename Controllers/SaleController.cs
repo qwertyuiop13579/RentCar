@@ -125,13 +125,39 @@ namespace Labs.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+        public ActionResult Payment(int id)
+        {
+            Sale sale = _context.FindSale(id);
+            Car car = _context.FindCar(sale.id_car);
+            if (sale.id_payment != null)
+            {
+                Payment pay = _context.FindPayment(sale.id_payment.Value);
+                var model = new PaymentViewModel()
+                {
+                    id_sale = sale.Id,
+                    date = pay.date,
+                    amount = pay.amount,
+                    withdrawAmount = pay.withdrawAmount,
+                    sender = pay.sender,
+                    operation_Id = pay.operation_Id
+                };
+                return View(model);
+            }
+            else return NotFound();
+
+
+            ;
+        }
+
+
         public IActionResult Cancel(int id_sale)
         {
             Sale sale = _context.FindSale(id_sale);
             if (sale != null)
             {
                 _context.UpdateSaleStatus(id_sale, "Отменён");
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("IndexByClient", "Sale");
             }
             return RedirectToAction("Index", "Home");
         }
@@ -143,6 +169,17 @@ namespace Labs.Controllers
             {
                 _context.UpdateSaleStatus(id_sale, "Подтверждён");
                 return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Restore(int id_sale)
+        {
+            Sale sale = _context.FindSale(id_sale);
+            if (sale != null && sale.status=="Отменён")
+            {
+                _context.UpdateSaleStatus(id_sale, "Обрабатывается");
+                return RedirectToAction("IndexByClient", "Sale");
             }
             return RedirectToAction("Index", "Home");
         }
@@ -226,9 +263,23 @@ namespace Labs.Controllers
         {
             if (ModelState.IsValid)
             {
-                Sale sale = new Sale() { date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.rentprice, status = model.status };
+                Sale sale = new Sale() { Id=model.Id,date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.rentprice, status = model.status };
 
-                if (_context.UpdateSale(sale)) return RedirectToAction("Index");
+                int canadd = _context.CanAddSale(sale);
+                if (canadd == 1)     //проверка на корректность
+                {
+                    ModelState.AddModelError("", "Неверное время аренды.");
+                    return View(model);
+                }
+                else if (canadd == 2)    //проверка на занятость
+                {
+                    ModelState.AddModelError("", "В это время автомобиль забронирован.");
+                    return View(model);
+                }
+
+
+
+                if (_context.UpdateSale(sale)) return RedirectToAction("Index","Home");
                 else ModelState.AddModelError("", "Ошибка");
 
             }

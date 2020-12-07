@@ -1,0 +1,41 @@
+﻿@model Labs.ViewModels.PaymentViewModel
+
+<div class="container sm padding-0">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="h3 mb-3 font-weight-normal">Оплата заказа @Model.id_sale</h1>
+        </div>
+        <div class="card-body row">
+            <div class="col-md-6">
+                <dl>
+                    <div class="row">
+                        <dt class="col-md-4">Дата оплаты</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.date)</dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="col-md-4">Сумма с учётом комиссии</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.amount)</dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="col-md-4">Сумма без комиссии</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.withdrawAmount)</dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="col-md-4">Отправитель, кошелёк ЯД</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.sender)</dd>
+                    </div>
+                    <div class="row">
+                        <dt class="col-md-4">ID операции в  ЯД</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.operation_Id)</dd>
+                    </div>
+                </dl>
+            </div>
+            <div class="col-md-6" style="margin-top: 15px;">
+                <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -32,11 +32,11 @@
 
             <div class="form-group">
                 <label class="control-label">Сумма к оплате</label>
-                <input type="number" asp-for="summ" class="form-control" id="price" readonly />
+                <input type="number" asp-for="summ" class="form-control" id="summ" readonly />
             </div>
 
             <div class="form-group button-group">
-                <input type="submit" value="Изменить" class="btn btn-primary" />
+                <input type="submit" value="Изменить" class="btn btn-primary" id="addbtn"/>
                 <a href='javascript:history.go(-1)' class="btn btn-primary-dark">Отмена</a>
             </div>
         </form>
@@ -52,29 +52,30 @@
                     var l = (String(b || 10).length - String(this).length) + 1;
                     return l > 0 ? new Array(l).join(c || '0') + this : this;
                 };
-                /*
-                var d = new Date();
-                var localDateTime = [d.getFullYear(), (d.getMonth() + 1).AddZero(), d.getDate().AddZero()].join('-') + 'T' + [d.getHours().AddZero(), d.getMinutes().AddZero()].join(':');
-                var inputdate2 = document.getElementById("inputdate2");
-                inputdate2.value = localDateTime;
-                var inputdate3 = document.getElementById("inputdate3");
-                inputdate3.value = localDateTime;*/
 
-                var price = document.getElementById("price");
+                var summ = document.getElementById("summ");
                 var rentprice = document.getElementById("rentprice");
+                var addbtn = document.getElementById("addbtn");
                 inputdate2.addEventListener("change", function (e) {
-                    if (new Date(inputdate3.value) < new Date(inputdate2.value)) {
-                        alert("Неверная дата аренды.");
-                        return;
+                    if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
+                        summ.value = -1;
+                        addbtn.disabled = true;
+
                     }
-                    price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
+                    else {
+                        summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
+                        addbtn.disabled = false;
+                    }
                 }, false);
                 inputdate3.addEventListener("change", function (e) {
-                    if (new Date(inputdate3.value) < new Date(inputdate2.value)) {
-                        alert("Неверная дата аренды.");
-                        return;
+                    if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
+                        summ.value = -1;
+                        addbtn.disabled = true;
                     }
-                    price.value = diffDates(new Date(inputdate3.value), new Date(inputdate2.value)) * rentprice.value;
+                    else {
+                        summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
+                        addbtn.disabled = false;
+                    }
                 }, false);
             </script>
         }

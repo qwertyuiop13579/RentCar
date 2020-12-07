@@ -217,7 +217,7 @@ namespace Labs.Controllers
                     User user = _context.FindUser(User.Identity.Name);
                     user.id_client = id_cl;
                     _context.UpdateUser(user.Id, user);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index","Home");
                 }
                 else ModelState.AddModelError("", "Ошибка");
 

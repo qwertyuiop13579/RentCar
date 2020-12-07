@@ -20,8 +20,15 @@
             <td>@sale.summ</td>
             <td>@sale.status</td>
             <td>
+                @if (sale.status == "Отменён")
+                {
                 <a class="btn btn-sm btn-danger" asp-controller="Sale" asp-action="Delete" asp-route-id_sale="@sale.Id">Удалить</a>
+                }
+                @if (sale.status == "Оплачен")
+                {
                 <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Confirm" asp-route-id_sale="@sale.Id">Подтвердить</a>
+                }
+
             </td>
         </tr>
 }

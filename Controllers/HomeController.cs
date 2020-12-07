@@ -3,25 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using Labs.Models;
 using System;
 using RestSharp;
+using Microsoft.AspNetCore.Builder;
 
 namespace Labs.Controllers
 {
     public class HomeController : Controller
     {
-        [Obsolete]
+
         public HomeController()
         {
-            /*
-            if (Request.Cookies["Key"] != null)
-            {
-                var cookie = new HttpCookie()
-                {
-                    Name="Key",
-                    Expires = DateTime.Now.AddDays(-1d)
-                };
-
-                Response.Cookies.Append("Key", null);
-            }*/
+            //var ctx1 = ControllerContext.HttpContext;
+            
+            
         }
         public IActionResult Index()
         {

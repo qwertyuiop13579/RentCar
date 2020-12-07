@@ -58,10 +58,6 @@ namespace Labs.Models
                 using var reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
-                    int? id_cl = null;
-                    string str = reader["id_client"].ToString();
-                    if (reader["id_client"].ToString() == "") id_cl = null;
-                    else id_cl = Convert.ToInt32(reader["id_client"]);
                     user = new User()
                     {
                         Id = Convert.ToInt32(reader["Id"]),
@@ -1149,7 +1145,24 @@ namespace Labs.Models
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
-                string command = $"update sale set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car},`id_payment`={sale.id_payment}, " +
+                string strpay = sale.id_payment.ToString() == "" ? "null" : sale.id_payment.ToString();
+                string command = $"update sale set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car},`id_payment`={strpay}, " +
+                    $"`date2`='{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}',`date3`='{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',`summ`={sale.summ}, `status`='{sale.status}'  where id={sale.Id};";
+                cmd.CommandText = command;
+                int res = cmd.ExecuteNonQuery();
+                if (res == 1) return true;
+                else return false;
+            }
+        }
+
+        public bool UpdateSaleWithoutPayment(Sale sale)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.Connection = conn;
+                string command = $"update sale set `date1`=now(),`id_client`={sale.id_client},`id_car`={sale.id_car}, " +
                     $"`date2`='{sale.date2.ToString("yyyy-MM-dd HH:mm:ss")}',`date3`='{sale.date3.ToString("yyyy-MM-dd HH:mm:ss")}',`summ`={sale.summ}, `status`='{sale.status}'  where id={sale.Id};";
                 cmd.CommandText = command;
                 int res = cmd.ExecuteNonQuery();
