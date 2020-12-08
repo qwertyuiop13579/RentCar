@@ -27,16 +27,16 @@ namespace Labs.Controllers
         }
 
 
-        public IActionResult Index(string mark, int? yearmin, int? yearmax)
+        public IActionResult Index(string mark,int? price1, int? price2, int? year1, int? year2)
         {
             if (AllMarks[0] != "Все") AllMarks.Insert(0, "Все");
             ViewBag.Marks = new SelectList(AllMarks);
             
             if(string.IsNullOrEmpty(mark)) return View(_context.GetAllCars());
-            return View(_context.GetAllCars(mark, yearmin, yearmax));
+            return View(_context.GetAllCars(mark, price1,price2, year1, year2));
         }
 
-        public IActionResult IndexBySupplier(string mark, int? yearmin, int? yearmax)
+        public IActionResult IndexBySupplier()
         {
             int? id_cl = _context.FindUser(User.Identity.Name).id_client;
             if (id_cl == null)

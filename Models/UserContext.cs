@@ -1496,7 +1496,7 @@ namespace Labs.Models
             return list;
         }
 
-        public List<Car> GetAllCars(string mark, int? yearmin, int? yearmax)
+        public List<Car> GetAllCars(string mark, int? price1, int? price2, int? year1, int? year2)
         {
             List<Car> list = new List<Car>();
 
@@ -1514,22 +1514,42 @@ namespace Labs.Models
                         hascr = true;
                     }
                 }
-                else { }
-                if (yearmin != null)
+
+                if (price1 != null)
                 {
-                    if (hascr) command += $" and year>={yearmin} ";
+                    if (hascr) command += $" and price>={price1} ";
                     else
                     {
-                        command += $" where year>={yearmin} ";
+                        command += $" where price>={price1} ";
                         hascr = true;
                     }
                 }
-                if (yearmax != null)
+                if (price2 != null)
                 {
-                    if (hascr) command += $" and year<={yearmax} ";
+                    if (hascr) command += $" and price<={price2} ";
                     else
                     {
-                        command += $" where year<={yearmax} ";
+                        command += $" where price<={price2} ";
+                        hascr = true;
+                    }
+                }
+
+
+                if (year1 != null)
+                {
+                    if (hascr) command += $" and year>={year1} ";
+                    else
+                    {
+                        command += $" where year>={year1} ";
+                        hascr = true;
+                    }
+                }
+                if (year2 != null)
+                {
+                    if (hascr) command += $" and year<={year2} ";
+                    else
+                    {
+                        command += $" where year<={year2} ";
                         hascr = true;
                     }
                 }

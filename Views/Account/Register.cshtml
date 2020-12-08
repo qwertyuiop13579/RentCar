@@ -1,4 +1,5 @@
 ﻿@model Labs.ViewModels.RegisterViewModel
+@{ ViewBag.Title = "Регистрация"; }
 <div class="form-login">
     <form class="form-signin" asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
         @Html.ValidationSummary()

@@ -1,5 +1,7 @@
 ﻿@model Labs.Models.Car
 
+@{ ViewBag.Title = "Автомобиль"; }
+
 <div class="container sm padding-0">
     <div class="card">
         <div class="card-header">
@@ -19,6 +21,11 @@
                     <div class="row">
                         <dt class="col-md-4">Модель</dt>
                         <dd class="col">@Html.DisplayFor(model => model.Model)</dd>
+                    </div>
+
+                    <div class="row">
+                        <dt class="col-md-4">Цена/час</dt>
+                        <dd class="col">@Html.DisplayFor(model => model.Price)</dd>
                     </div>
 
                     <div class="row">
@@ -52,14 +59,14 @@
                 {
                     if(User.IsInRole("user"))
                     {
-                        <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+                <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
                     }
-                    <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+                <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
                 }
                 else
                 {
-                    <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
-                    <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
+                <a class="btn btn-primary" asp-controller="Sale" asp-action="Create" asp-route-id_c="@Model.Id">Аренда</a>
+                <a class="btn btn-primary-dark" href='javascript:history.go(-1)'>Назад</a>
                 }
             </div>
         </div>
