@@ -31,15 +31,14 @@ namespace Labs
         public void ConfigureServices(IServiceCollection services)
         {
             
-            string connection = Configuration.GetConnectionString("UserConnection");
-            //string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
+            //string connection = Configuration.GetConnectionString("UserConnection");
+            string connection = Configuration.GetConnectionString("AzureMysqlDBConnection");
             services.Add(new ServiceDescriptor(typeof(UserContext), new UserContext(connection)));
 
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
-                {
-                    
+                {                    
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                     options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
 
@@ -86,23 +85,6 @@ namespace Labs
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en");
             CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
-
-            /*
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Cookies.ContainsKey(".AspNetCore.Cookies"))
-                {
-                    context.Response.Cookies.Delete(".AspNetCore.Cookies");
-                }
-                else
-                {
-                    context.Response.Cookies.Append("Cook", "Tom");
-                    //await context.Response.WriteAsync("Hello World!");
-                }
-                await next();
-            });*/
-
-
 
             app.UseAuthentication();    // аутентификация
             app.UseAuthorization();     // авторизация

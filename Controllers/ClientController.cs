@@ -125,6 +125,18 @@ namespace Labs.Controllers
             return NotFound();
         }
 
+        public string GetSurname(int id)
+        {
+            Client cl = _context.FindClient(id);
+            if(cl!=null)
+            {
+                int id_pass = cl.id_passport;
+                Passport pass = _context.FindPassport(id_pass);
+                return pass.surname;
+            }
+            return " ";
+        }
+
 
 
         public IActionResult Edit(int id)

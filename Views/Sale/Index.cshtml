@@ -13,7 +13,7 @@ else
     {
 <tr>
     <td> <a asp-controller="Client" asp-action="Details" asp-route-id="@sale.id_client">@sale.id_client</a></td>
-    <td> <a asp-controller="Car" asp-action="Details" asp-route-id="@sale.id_car">@sale.id_car</a></td>
+    <td> <a asp-controller="Car" asp-action="Details" asp-route-id="@sale.id_car"><img class="imgcar2" src="@Url.Action("GetImage", "Car", new { id=sale.id_car})" /></a></td>
     <td>@sale.date2.ToString("dd-MM-yyyy HH:mm")</td>
     <td>@sale.date3.ToString("dd-MM-yyyy HH:mm")</td>
     <td>@sale.summ</td>
@@ -27,8 +27,7 @@ else
 <a class="btn btn-sm btn-primary" asp-controller="Sale" asp-action="Confirm" asp-route-id_sale="@sale.Id">Подтвердить</a>}
 
     </td>
-</tr>
-}
+</tr>}
 </table>}
 
     <div class="col-md-6" style="margin-top: 15px;">
@@ -36,3 +35,8 @@ else
     </div>
 
 </div>
+@section scripts{
+    <script type="text/javascript">
+            function details(id) { window.location.href='@Url.Action("Details", "Car")/'  +  id; }
+    </script>
+}

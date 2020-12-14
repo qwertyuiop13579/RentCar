@@ -33,7 +33,7 @@
             </div>
 
             <div class="form-group button-group">
-                <input type="submit" value="Добавить" class="btn btn-primary" id="addbtn"/>
+                <input type="submit" value="Добавить" class="btn btn-primary" id="addbtn" />
                 <a asp-controller="Car" asp-action="Index" class="btn btn-primary-dark">Отмена</a>
             </div>
         </form>
@@ -44,7 +44,12 @@
                 function diffDates(day_one, day_two) {
                     return (day_one - day_two) / (60 * 60 * 1000);
                 };
-                
+
+                var rounded = function (number)
+                {
+                    return +number.toFixed(2);
+                }
+
                 Number.prototype.AddZero = function (b, c) {
                     var l = (String(b || 10).length - String(this).length) + 1;
                     return l > 0 ? new Array(l).join(c || '0') + this : this;
@@ -59,27 +64,23 @@
                 var summ = document.getElementById("summ");
                 var rentprice = document.getElementById("rentprice");
                 var addbtn = document.getElementById("addbtn");
-                inputdate2.addEventListener("change", function (e)
-                {
+                inputdate2.addEventListener("change", function (e) {
                     if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
                         summ.value = -1;
                         addbtn.disabled = true;
                     }
-                    else
-                    {
-                        summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
+                    else {
+                        summ.value = rounded(diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value);
                         addbtn.disabled = false;
                     }
                 }, false);
                 inputdate3.addEventListener("change", function (e) {
-                    if (new Date(inputdate2.value) > new Date(inputdate3.value))
-                    {
+                    if (new Date(inputdate2.value) > new Date(inputdate3.value)) {
                         summ.value = -1;
                         addbtn.disabled = true;
                     }
-                    else
-                    {
-                        summ.value = diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value;
+                    else {
+                        summ.value = rounded(diffDates(new Date(inputdate3.value).setMinutes(0), new Date(inputdate2.value).setMinutes(0)) * rentprice.value);
                         addbtn.disabled = false;
                     }
                 }, false);
