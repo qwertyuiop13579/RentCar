@@ -36,6 +36,13 @@ namespace Labs.Controllers
             return View(_context.GetAllCars(mark, price1,price2, year1, year2));
         }
 
+
+        public IActionResult IndexBySearch(string mark, int? price1, int? price2, int? year1, int? year2)
+        {
+            return View(_context.GetAllCars(mark, price1, price2, year1, year2));
+        }
+
+
         public IActionResult IndexBySupplier()
         {
             int? id_cl = _context.FindUser(User.Identity.Name).id_client;

@@ -266,7 +266,7 @@ namespace Labs.Controllers
             {
                 Sale sale = new Sale() { Id=model.Id,date1 = DateTime.Now, id_client = _context.FindUser(User.Identity.Name).id_client.Value, id_car = model.id_car, id_payment = null, date2 = model.date2, date3 = model.date3, summ = model.summ, status = model.status };
 
-                int canadd = _context.CanAddSale(sale);
+                int canadd = _context.CanEditSale(sale);
                 if (canadd == 1)     //проверка на корректность
                 {
                     ModelState.AddModelError("", "Неверное время аренды.");

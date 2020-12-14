@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Labs.Models.Car>
+@{ ViewBag.Title = "Список машин"; }
+
+@* var id = model.Id; //if you want to pass an Id parameter
+    window.location.href = '@Url.Action("Action", "Controller")/' + id; *@
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-8">
+            @foreach (var car in Model)
+            {
+<div class="card car" onclick="details(@car.Id)">
+    <div class="card-body row">
+        <div class="col-md-4">
+            <img src="@Url.Action("GetImage", "Car", new { id=car.Id })" />
+        </div>
+        <div class="col-md-5">
+            <h4 class="card-title">@car.Mark @car.Model</h4>
+        </div>
+        <div class="col-md-3">
+            <p>Цена/час</p>
+            <h1 style="display: inline;">@car.Price</h1>
+            <h4 style="display: inline;">BYN</h4>
+        </div>
+    </div>
+</div>      }
+        </div>
+    </div>
+    @section scripts
+    {
+        <script type="text/javascript">
+                function details(id) {
+                    window.location.href='@Url.Action("Details", "Car")/'  +  id;
+                }
+
+        </script>
+
+    }
+</div>

@@ -12,7 +12,7 @@
             <form method="get">
                 <div class="form-group">
                     <label class="control-label">Марка</label>
-                    <select name="mark" asp-items="ViewBag.Marks" class="form-control"></select>
+                    <select name="mark" id="mark" asp-items="ViewBag.Marks" class="form-control"></select>
                 </div>
 
                 <div class="form-group">
@@ -67,23 +67,35 @@
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script type="text/javascript">
-                function details(id) {
+            function details(id)
+                {
                     window.location.href='@Url.Action("Details", "Car")/'  +  id;
                 }
-
         </script>
 
 
         <script>
-            $(function ()
+            window.$_GET = new URLSearchParams(location.search);
+            var price1 = $_GET.get('price1');
+            if (price1 == undefined) price1 = "0";
+            var price2 = $_GET.get('price2');
+            if (price2 == undefined) price2 = "30";
+            var year1 = $_GET.get('year1');
+            if (year1 == undefined) year1 = "1950";
+            var year2 = $_GET.get('year2');
+            if (year2 == undefined) year2 = "2020";
+            var mark = $_GET.get('mark');
+            if (mark == undefined) mark = "Все";
+            var selectmark = document.getElementById("mark");
+            selectmark.value = mark;
+            $(function ()     //Настраиваем слайдер с ценой
             {
                 $("#slider-range-price").slider({
                     range: true,
                     min: 0,
-                    max: 100,
-                    values: [0, 100],
-                    slide: function (event, ui)
-                    {
+                    max: 30,
+                    values: [price1, price2],
+                    slide: function (event, ui) {
                         $("#rangeamountprice").val(ui.values[0] + " - " + ui.values[1]);
                         $("#price1").val(ui.values[0]);
                         $("#price2").val(ui.values[1]);
@@ -94,12 +106,13 @@
                 $("#price2").val($("#slider-range-price").slider("values", 1));
             });
 
-            $(function () {
+            $(function () {                    //Настраиваем слайдер с годо
+                $().get()
                 $("#slider-range-year").slider({
                     range: true,
                     min: 1950,
                     max: 2020,
-                    values: [1950, 2020],
+                    values: [year1, year2],
                     slide: function (event, ui) {
                         $("#rangeamountyear").val(ui.values[0] + " - " + ui.values[1]);
                         $("#year1").val(ui.values[0]);
@@ -110,9 +123,6 @@
                 $("#year1").val($("#slider-range-year").slider("values", 0));
                 $("#year2").val($("#slider-range-year").slider("values", 1));
             });
-
-
         </script>
-
     }
 </div>

@@ -15,7 +15,7 @@
         </div>
 
         <div class="form-label-group">
-            <input asp-for="Password" type="password" id="Password" class="form-control" placeholder="Пароль" required>
+            <input asp-for="Password" type="password" id="Password" class="form-control" placeholder="Пароль" minlength="6"  required>
             <label asp-for="Password" for="Password">Пароль</label>
             <span asp-validation-for="Password"></span>
         </div>

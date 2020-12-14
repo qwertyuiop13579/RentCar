@@ -881,6 +881,26 @@ namespace Labs.Models
             return 0;
         }
 
+
+        public int CanEditSale(Sale sale)
+        {
+            if (sale.date2 > sale.date3 || sale.date2.AddSeconds(59) < DateTime.Now || sale.date3.AddSeconds(59) < DateTime.Now)
+            {
+                return 1;
+            }
+
+            var sales = GetSalesByCar(sale.id_car);
+            foreach (Sale s in sales)
+            {
+                if ((sale.date2 > s.date2 && sale.date2 < s.date3 && s.status != "Отменён" ) || (sale.date3 > s.date2 && sale.date3 < s.date3 && s.status != "Отменён")&& sale.Id!=s.Id)
+                {
+                    return 2;
+                }
+            }
+            return 0;
+        }
+
+
         public bool DeleteUser(int id)
         {
             using (MySqlConnection conn = GetConnection())
